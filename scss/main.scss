@@ -1,0 +1,142 @@
+/* universal selectors */
+* {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+body {
+  background-color: #333;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #222;
+}
+::-webkit-scrollbar-thumb {
+  background: #353535;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #444;
+}
+
+/* important stuff */
+#mainWrapper {
+  display: flex;
+  width: min(1200px, 90vw);
+  height: 80vh;
+  margin: 10vh auto 0;
+}
+
+#leftWrapper {
+  width: 70%;
+  height: 100%;
+}
+
+#outputWrapper {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  width: 100%;
+  height: 90%;
+  margin: auto;
+  background-color: #0a0a0a;
+  border: 3px solid black;
+  border-bottom: none;
+  box-sizing: border-box;
+  font-size: 1rem;
+  color: #ccc;
+  overflow: auto;
+  word-break: break-all;
+  & > div {
+    border: 2px solid #555;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    padding: 8px;
+    line-height: 130%;
+    h3, h4 { display: inline-block;  }
+    h4 { 
+      color: #555;
+      margin-left: 20px;
+      font-size: 0.8rem;
+      vertical-align: middle;
+    }
+    p { margin-top: 5px; }
+  }
+}
+
+#inputWrapper {
+  width: 100%;
+  height: 10%;
+  margin: auto;
+  display: flex;
+  input {
+    display: block;
+    background-color: #111;
+    border-radius: 0;
+    outline: none;
+    border: 3px solid black;
+    box-sizing: border-box;
+    font-size: 2.2rem;
+    color: #ccc;
+    padding: 0 20px;
+    &:hover { background-color: #222; color: #ddd; }
+  }
+  input[type=text] {
+    width: 86%;
+    border-right: none;
+    &:focus { background-color: #222; color: #ddd; }
+  }
+  input[type=button] {
+    &:hover { cursor: pointer; }
+  }
+}
+
+#rightWrapper {
+  width: 30%;
+  height: 100%;
+  background-color: green;
+}
+
+#activeUsersWrapper {
+  background-color: #222;
+  color: #ddd;
+  border: 3px solid black;
+  border-left: none;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 20px;
+  h1 {
+    font-size: 1.35rem;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  ul {
+    padding-left: 20px;
+    line-height: 150%;
+    list-style: none;
+    font-size: 1.1rem;
+    li::before {
+      content: '\2022';
+      color: #31750f;
+      font-weight: bold;
+      font-size: 1.5rem;
+      line-height: 0;
+      width: 1rem;
+      display: inline-block;
+      vertical-align: middle;
+    }
+  }
+}
+
+@media screen and (max-width: 970px) {
+  #leftWrapper { width: 100%; }
+  #rightWrapper { display: none; }
+}
+
+@media screen and (max-width: 700px) {
+  #mainWrapper { width: 100%; height: 100vh; margin: 0 auto; }
+}
