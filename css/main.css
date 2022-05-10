@@ -53,7 +53,6 @@ body {
   font-size: 1rem;
   color: #ccc;
   overflow: auto;
-  word-break: break-all;
 }
 #outputWrapper > div {
   border: 2px solid #555;
@@ -65,14 +64,18 @@ body {
 #outputWrapper > div h3, #outputWrapper > div h4 {
   display: inline-block;
 }
+#outputWrapper > div h3 {
+  margin-right: 10px;
+}
 #outputWrapper > div h4 {
   color: #555;
-  margin-left: 20px;
   font-size: 0.8rem;
   vertical-align: middle;
 }
 #outputWrapper > div p {
   margin-top: 5px;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 #inputWrapper {
