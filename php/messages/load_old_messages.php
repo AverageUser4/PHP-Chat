@@ -18,7 +18,7 @@ if(isset($_GET['oldest'])) {
 }
 
 
-$PDO = require_once 'pdo_connect.php';
+$PDO = require_once '../global/pdo_connect.php';
 if(!$PDO instanceof PDO)
   failure($PDO);
 

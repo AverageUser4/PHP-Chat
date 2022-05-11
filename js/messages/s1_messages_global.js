@@ -4,28 +4,10 @@
 
 const output_wrapper = document.getElementById('outputWrapper');
 //which messages to take from database
-let oldest_message_id = 0;
-let latest_message_id = 0;
+let oldest_message_id;
+let latest_message_id;
 //adjust message's date to client's timezone
 let client_server_time_difference = 0;
-
-
-/* generic function for sending xmlhttp requests */
-
-function sendRequest(callback, file, params = '', method = 'GET') {
-  const xmlhttp = new XMLHttpRequest();
-
-  xmlhttp.onload = callback;
-
-  if(method === 'GET') {
-    xmlhttp.open(method, file + '?' + params);
-    xmlhttp.send();
-  }
-  else {
-    xmlhttp.open(method, file);
-    xmlhttp.send(params);
-  }
-}
 
 
 /* adjust message's date to client's timezone */

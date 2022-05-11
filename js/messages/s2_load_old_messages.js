@@ -2,7 +2,7 @@
 
 /* ask for 50 latest messages from database when document is loaded */
 
-sendRequest(getMessagesWhenLoaded, 'php/load_old_messages.php');
+sendRequest(getMessagesWhenLoaded, 'php/messages/load_old_messages.php');
 
 function getMessagesWhenLoaded() {
   // insert messages we asked for into the output field
@@ -53,7 +53,7 @@ function scrolledToTop() {
     return;
 
   if(!no_more_old_messages && old_messages_array.length === 0)
-    sendRequest(readIncomingOldMessages, 'php/load_old_messages.php', `oldest=${oldest_message_id}`);
+    sendRequest(readIncomingOldMessages, 'php/messages/load_old_messages.php', `oldest=${oldest_message_id}`);
   else
     loadOldMessage();
 }

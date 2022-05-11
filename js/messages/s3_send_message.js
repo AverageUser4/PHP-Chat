@@ -72,7 +72,7 @@ function sendMessage() {
   if(msg === '' || (msg.indexOf(' ') !== -1 && msg.match(/ /g).length === msg.length))
     return;
   
-  sendRequest(sendMessageUpdate, 'php/send_message.php', `user=user12345&message=${msg}`);
+  sendRequest(sendMessageUpdate, 'php/messages/send_message.php', `user=user12345&message=${msg}`);
 }
 
 function sendMessageUpdate() {
@@ -93,4 +93,3 @@ function sendMessageUpdate() {
   output_wrapper.appendChild(div);
   output_wrapper.scrollTo(0, 999999);
 }
-
