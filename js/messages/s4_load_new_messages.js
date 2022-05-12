@@ -18,7 +18,8 @@ function isVarDefined() {
   (`php/messages/load_new_messages.php?latest=${latest_message_id}&user=user12345`);
   event_source.addEventListener('new_msg', appendNewMessages);
   event_source.addEventListener('msg_error', handleError);
-  event_source.addEventListener('error', () => 'Nie udało się nawiązać połączenia z serwerem.');
+  event_source.addEventListener('timeout', (event) => { latest_message_id = event.data; event_source.close(); isVarDefined(); console.log(event.data); });
+  //event_source.addEventListener('error', () => console.log('Nie udało się nawiązać połączenia z serwerem.'));
   event_source.onmessage = () => console.log('penis');
 }
 

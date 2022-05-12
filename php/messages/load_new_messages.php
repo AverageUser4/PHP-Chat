@@ -20,6 +20,17 @@ $latest_id = $_GET['latest'];
 $user = $_GET['user'];
 
 
+function timeoutHandler() {
+  if(connection_aborted())
+    return;
+
+  global $latest_id;
+
+  echo "event: timeout\n", "data: $latest_id\n\n";
+}
+register_shutdown_function('timeoutHandler');
+
+
 $PDO = require_once "../global/pdo_connect.php";
 if(!$PDO instanceof PDO)
   failure($PDO);
