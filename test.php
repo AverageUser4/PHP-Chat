@@ -1,18 +1,15 @@
 <?php
 
 
-echo 'a';
-sleep(1);
-ob_end_clean();
-flush();
-echo 'b';
-sleep(1);
-echo 'c';
-sleep(1);
-echo 'd';
-sleep(1);
-echo 'e';
-sleep(1);
+function abc() {
+  $e = error_get_last();
+  echo str_contains($e['message'], 'Maximum execution time');
+}
 
+register_shutdown_function('abc');
 
-//echo var_dump(get_html_translation_table(HTML_SPECIALCHARS, ENT_QUOTES));
+set_time_limit(1);
+
+while(1) {
+  $a = 3;
+}

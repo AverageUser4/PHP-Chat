@@ -5,6 +5,8 @@
 const myInterval = setInterval(isVarDefined, 1000);
 let event_source;
 let failure_count = 0;
+let connection_open = false;
+let failed_connections = 0;
 
 function isVarDefined() {
   // wait for latest_message_id to get defined
@@ -17,10 +19,20 @@ function isVarDefined() {
   event_source = new EventSource
   (`php/messages/load_new_messages.php?latest=${latest_message_id}&user=user12345`);
   event_source.addEventListener('new_msg', appendNewMessages);
-  event_source.addEventListener('msg_error', handleError);
-  event_source.addEventListener('timeout', (event) => { latest_message_id = event.data; event_source.close(); isVarDefined(); console.log(event.data); });
-  //event_source.addEventListener('error', () => console.log('Nie udało się nawiązać połączenia z serwerem.'));
-  event_source.onmessage = () => console.log('penis');
+  event_source.addEventListener('custom_error', handleCustomError);
+  //event_source.addEventListener('timeout', (event) => { latest_message_id = event.data; event_source.close(); isVarDefined(); });
+  //error jest wysyłany kiedy nie uda się połączyć z serwerem lub skrypt zostanie przerwany
+  //bez użycia event_source.close()
+  event_source.addEventListener('open', () => connection_open = true);
+  event_source.addEventListener('error', unableToConnect);
+  /*
+  - nie udało się nawiązać połączenia (open nie został odpalony)
+    * próbujemy się co jakiś czas znowu połączyć
+  - połączenie nawiązane, problem z danymi, bazą itd
+    * jeżeli dane są niepoprawne nie ma sensu próbować się dalej
+    łączyć z takimi samymi danymi
+  - czas trwania skryptu przekroczył godzinę    
+  */
 }
 
 function appendNewMessages(event) {
@@ -43,9 +55,13 @@ function appendNewMessages(event) {
   }
 }
 
-function handleError(event) {
+function handleCustomError(event) {
+  if(event.data != '')
+    latest_message_id = event.data;
+    
+
   failure_count++;
-  console.log(event.data);
+  console.log(event);
   event_source.close();
 
   if(failure_count >= 10) {
@@ -55,3 +71,25 @@ function handleError(event) {
 
   setTimeout(isVarDefined, 10000);
 }
+
+function unableToConnect() {
+  if(connection_open) {
+    connection_open = false;
+    return;
+  }
+
+  if(++failed_connections >= 3) {
+    event_source.close();
+    failed_connections = 0;
+    setTimeout(isVarDefined, 600);
+    alert("Nie udało się nawiązać połączenia z serwerem.");
+  }
+}
+
+/*
+- timeout, unknown, unexpected, db_connect_fail: 
+  * spróbuj łączyć się natychmiast
+  * po kilku nieudanych próbach odczekaj 10 minut
+  
+- wrong_data: nie podejmuj dalszych prób połączenia
+*/

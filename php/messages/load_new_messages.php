@@ -2,50 +2,71 @@
 header("Content-Type: text/event-stream");
 header('Cache-Control: no-cache');
 
-set_time_limit(3600);
+set_time_limit(3);
+//set_time_limit(3600);
 
-function failure($error) { 
-  echo "event: msg_error\n", "data: $error\n\n";
+function failure($e) {
+  global $custom_error;
+  $custom_error = $e;
   exit();
 }
 
-
-if(!isset($_GET['latest']) || !filter_var($_GET['latest'], FILTER_VALIDATE_INT))
-  failure('Niepoprawny numer ID najnowszej wiadomości.');
-
-if(!isset($_GET['user']))
-  failure('Nie podano nazwy użytkownika.');
-
-$latest_id = $_GET['latest'];
-$user = $_GET['user'];
-
-
-function timeoutHandler() {
+function shutdownHandler() {
   if(connection_aborted())
     return;
 
+  global $custom_error;
   global $latest_id;
+  echo "event: custom_error\n", "data: $latest_id\n";
 
-  echo "event: timeout\n", "data: $latest_id\n\n";
+  if($e = error_get_last()) {
+    if(str_contains($e['message'], 'Maximum execution time'))
+      echo "id: timeout\n\n";
+    else
+      echo "id: unknown\n\n";
+    return;
+  }
+
+  if(isset($custom_error))
+    echo "id: $custom_error\n\n";
+  else
+    echo "id: unexpected\n\n";
 }
-register_shutdown_function('timeoutHandler');
+register_shutdown_function('shutdownHandler');
+
+
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+//////////////////////////////////////////////
+
+
+if(!isset($_GET['latest'])
+  || !filter_var($_GET['latest'], FILTER_VALIDATE_INT)
+  || !isset($_GET['user']))
+    failure('wrong_data');
+
+
+$latest_id = $_GET['latest'];
+$user = $_GET['user'];
+$custom_error = null;
 
 
 $PDO = require_once "../global/pdo_connect.php";
 if(!$PDO instanceof PDO)
-  failure($PDO);
+  failure('db_connect_fail');
 
+$PDO_Statement = $PDO -> prepare("SELECT * FROM messages WHERE
+  id > :id AND NOT nickname = :user");
+$PDO_Statement -> bindParam(':user', $user, PDO::PARAM_STR);
 
 while (1) {
   /* check database every 3 seconds, if there are messages
   that were sent by someone else than the user, send them to user */
   if(connection_aborted()) break;
 
-  $PDO_Statement = $PDO -> prepare("SELECT * FROM messages WHERE
-    id > :id AND NOT nickname = :user");
-
   $PDO_Statement -> bindParam(':id', $latest_id, PDO::PARAM_INT);
-  $PDO_Statement -> bindParam(':user', $user, PDO::PARAM_STR);
   $PDO_Statement -> execute();
 
   $result = $PDO_Statement -> fetchAll(PDO::FETCH_NUM);
