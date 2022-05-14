@@ -72,7 +72,7 @@ function sendMessage() {
   if(msg === '' || (msg.indexOf(' ') !== -1 && msg.match(/ /g).length === msg.length))
     return;
   
-  sendRequest(sendMessageUpdate, 'php/messages/send_message.php', `user=user12345&message=${msg}`);
+  sendRequest(sendMessageUpdate, 'php/messages/send_message.php', `user=${guest_name_encoded}&message=${encodeURIComponent(msg)}`);
 }
 
 function sendMessageUpdate() {
@@ -86,7 +86,7 @@ function sendMessageUpdate() {
   const div = document.createElement('DIV');
 
   div.innerHTML =
-  `<h3>user12345</h3>
+  `<h3>${guest_name}</h3>
   <h4>${new Date().toLocaleString()}</h4>
   <p>${msg.replace(/</g, '&lt;')}</p>`;
 

@@ -1,5 +1,7 @@
 <?php
 
+set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat/php');
+
 function failure($error) { echo 'error%' . $error; exit(); }
 
 function customEntities($str) {
@@ -22,6 +24,7 @@ if(!isset($_GET['user']) || !isset($_GET['message']))
 $user = customEntities($_GET['user']);
 $msg = customEntities($_GET['message']);
 
+
 if(
   mb_strlen($user, 'UTF-8') == 0
   || mb_strlen($user, 'UTF-8') > 32
@@ -39,7 +42,7 @@ if(
 
 /* inserting input into the database */
   
-$PDO = require_once '../global/pdo_connect.php';
+require_once 'global/pdo_connect.php';
 if(!$PDO instanceof PDO)
   failure($PDO);
 

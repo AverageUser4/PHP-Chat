@@ -38,7 +38,23 @@
 
   </div>
 
+
+  <?php 
+
+    set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat/php');
+
+    $messages = require_once 'messages/load_old_messages.php';
+    echo "<template id='old_mes_data'>$messages</template>";
+
+    require_once 'accounts/verify_guest.php';
+
+    echo "<template id='guest_data'>$result[0]%$result[1]</template>";
+
+  ?>
+
+
   <script defer src="js/global/s1_global.js"></script>
+  <script defer src="js/global/s2_cookies.js"></script>
 
   <script defer src="js/messages/s1_messages_global.js"></script>
   <script defer src="js/messages/s2_load_old_messages.js"></script>

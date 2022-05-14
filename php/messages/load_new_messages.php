@@ -2,8 +2,8 @@
 header("Content-Type: text/event-stream");
 header('Cache-Control: no-cache');
 
-set_time_limit(3);
-//set_time_limit(3600);
+set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat/php');
+set_time_limit(3600);
 
 function failure($e) {
   global $custom_error;
@@ -53,7 +53,7 @@ $user = $_GET['user'];
 $custom_error = null;
 
 
-$PDO = require_once "../global/pdo_connect.php";
+require_once "global/pdo_connect.php";
 if(!$PDO instanceof PDO)
   failure('db_connect_fail');
 

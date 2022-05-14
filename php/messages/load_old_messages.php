@@ -1,5 +1,7 @@
 <?php
 
+set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat/php');
+
 function failure($error) { echo 'error%' . $error; exit(); }
 
 
@@ -8,7 +10,7 @@ $limit = 50;
 $first_page_load = true;
 
 if(isset($_GET['oldest'])) {
-  if(!filter_input(INPUT_GET, 'oldest', FILTER_VALIDATE_INT))
+  if(!filter_var($_GET['oldest'], FILTER_VALIDATE_INT))
     failure('Niepoprawny numer ID wiadomości.');
 
   $oldest_id = $_GET['oldest'];
@@ -18,7 +20,7 @@ if(isset($_GET['oldest'])) {
 }
 
 
-$PDO = require_once '../global/pdo_connect.php';
+require_once 'global/pdo_connect.php';
 if(!$PDO instanceof PDO)
   failure($PDO);
 
@@ -53,5 +55,8 @@ for($i = 0; $i < $len; $i++) {
   $messages_string .= $result[$i][3];
   $i != $len - 1 ? $messages_string .= '%' : 0;
 }
+
+if($first_page_load)
+  return $messages_string;
 
 echo $messages_string;

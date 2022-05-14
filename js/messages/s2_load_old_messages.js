@@ -2,13 +2,16 @@
 
 /* ask for 50 latest messages from database when document is loaded */
 
-sendRequest(getMessagesWhenLoaded, 'php/messages/load_old_messages.php');
+//sendRequest(getMessagesWhenLoaded, 'php/messages/load_old_messages.php');
+getMessagesWhenLoaded();
+
 
 function getMessagesWhenLoaded() {
   // insert messages we asked for into the output field
 
-  const arr = this.responseText.split('%');
-  
+  //const arr = this.responseText.split('%');
+  const arr = document.getElementById('old_mes_data').innerHTML.split('%');
+
   if(arr[0] === 'error') {
     alert(arr[1]);
     return;

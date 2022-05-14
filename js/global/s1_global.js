@@ -14,5 +14,3 @@ function sendRequest(callback, file, params = '', method = 'GET') {
     xmlhttp.send(params);
   }
 }
-
-
