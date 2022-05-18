@@ -4,7 +4,13 @@
 
 const input_field = document.getElementById('textInput');
 const send_button = document.getElementById('sendButton');
+const honey_pot = document.getElementById('honeypot');
 let msg = '';
+let last_message_time = Date.now();
+let messages_per_minute = 0;
+let limit_ends_at = Date.now() + 60000;
+setInterval(() => { messages_per_minute = 0;
+limit_ends_at = Date.now() + 60000; }, 60000);
 
 send_button.addEventListener('click', sendMessage);
 input_field.addEventListener('input', validateInput);
@@ -65,6 +71,19 @@ function validateInput() {
 
 function sendMessage() {
   // send message unless it's empty string or consists only of spaces
+  // also some spam protection
+  if(honey_pot.value !== '')
+    return;
+
+  if(Date.now() - last_message_time < 300)
+    return;
+  last_message_time = Date.now();
+
+  if(++messages_per_minute >= 45) {
+    let secs_left = Math.trunc((limit_ends_at - Date.now()) / 1000);
+    alert(`Limit 45 wiadomości na minutę przekroczony. Pozostało ${secs_left} sekund.`);
+    return;
+  }
 
   msg = input_field.value;
   input_field.value = '';
@@ -72,7 +91,8 @@ function sendMessage() {
   if(msg === '' || (msg.indexOf(' ') !== -1 && msg.match(/ /g).length === msg.length))
     return;
   
-  sendRequest(sendMessageUpdate, 'php/messages/send_message.php', `user=${guest_name_encoded}&message=${encodeURIComponent(msg)}`);
+  sendRequest(sendMessageUpdate, 'php/messages/send_message.php',
+  `user=${guest_name_encoded}&guest_id=${guest_id}&guest_token=${guest_token}&message=${encodeURIComponent(msg)}`);
 }
 
 function sendMessageUpdate() {
@@ -90,6 +110,6 @@ function sendMessageUpdate() {
   <h4>${new Date().toLocaleString()}</h4>
   <p>${msg.replace(/</g, '&lt;')}</p>`;
 
-  output_wrapper.appendChild(div);
-  output_wrapper.scrollTo(0, 999999);
+  output_container.appendChild(div);
+  output_container.scrollTo(0, 999999);
 }

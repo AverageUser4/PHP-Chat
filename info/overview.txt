@@ -1,0 +1,12 @@
+index.php:
+
+- website's structure is sent to user with additional data in <template> tags:
+  * 50 latest messages
+  * guest token and id 
+
+- if token was sent with cookies, it gets verified:
+  * if it exists in database, it gets sent back to user
+  * if it doesn't, new token is created and sent to user
+  * javascript sets cookie token, and uses token and id when sending messages
+
+- everything is handled by javascripts

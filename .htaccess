@@ -1,0 +1,4 @@
+<RequireAll>
+Require all granted
+Require not ip 248.0.0.1
+</RequireAll>

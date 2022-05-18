@@ -1,0 +1,7 @@
+- spam protection
+- accounts
+- active users
+- emotes
+- profile pictures
+- admin accounts
+- different channels

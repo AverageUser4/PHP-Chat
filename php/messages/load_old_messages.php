@@ -1,8 +1,7 @@
 <?php
 
 set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat/php');
-
-function failure($error) { echo 'error%' . $error; exit(); }
+require_once 'global/validate.php';
 
 
 $oldest_id = PHP_INT_MAX;
@@ -14,8 +13,7 @@ if(isset($_GET['oldest'])) {
     failure('Niepoprawny numer ID wiadomości.');
 
   $oldest_id = $_GET['oldest'];
-  //150, 20 for testing
-  $limit = 20;
+  $limit = 150;
   $first_page_load = false;
 }
 

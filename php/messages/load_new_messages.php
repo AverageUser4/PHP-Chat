@@ -1,11 +1,12 @@
-<?php
+<?php 
 header("Content-Type: text/event-stream");
 header('Cache-Control: no-cache');
 
 set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat/php');
 set_time_limit(3600);
+require_once 'global/validate.php';
 
-function failure($e) {
+function sse_failure($e) {
   global $custom_error;
   $custom_error = $e;
   exit();
@@ -41,12 +42,8 @@ register_shutdown_function('shutdownHandler');
 //////////////////////////////////////////////
 //////////////////////////////////////////////
 
-
-if(!isset($_GET['latest'])
-  || !filter_var($_GET['latest'], FILTER_VALIDATE_INT)
-  || !isset($_GET['user']))
-    failure('wrong_data');
-
+if(!get_exists(['latest', 'user']) || !valid_int($_GET['latest']))
+  sse_failure('wrong_data');
 
 $latest_id = $_GET['latest'];
 $user = $_GET['user'];
@@ -55,7 +52,7 @@ $custom_error = null;
 
 require_once "global/pdo_connect.php";
 if(!$PDO instanceof PDO)
-  failure('db_connect_fail');
+  sse_failure('db_connect_fail');
 
 $PDO_Statement = $PDO -> prepare("SELECT * FROM messages WHERE
   id > :id AND NOT nickname = :user");

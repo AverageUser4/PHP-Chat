@@ -1,0 +1,50 @@
+#formContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(1200px, 90vw);
+  height: 80vh;
+  margin: 10vh auto 0;
+  background-color: #454545;
+  border: 3px solid black;
+  box-sizing: border-box;
+}
+#formContainer form {
+  width: 60%;
+  margin: auto;
+}
+#formContainer form label {
+  font-size: 1.8rem;
+  display: block;
+  text-align: center;
+  padding-bottom: 10px;
+}
+#formContainer form label:not(#formContainer form label:first-of-type) {
+  padding-top: 10px;
+}
+#formContainer form input {
+  width: 100%;
+  height: 70px;
+}
+#formContainer form input[type=submit] {
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+#formContainer form p {
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+@media screen and (max-width: 700px) {
+  #formContainer {
+    width: 100%;
+    height: 100vh;
+    margin: 0 auto;
+    border: none;
+  }
+  #formContainer form {
+    width: 80%;
+  }
+}
+
+/*# sourceMappingURL=register.css.map */

@@ -2,7 +2,7 @@
 
 /* global variables */
 
-const output_wrapper = document.getElementById('outputWrapper');
+const output_container = document.getElementById('outputContainer');
 //which messages to take from database
 let oldest_message_id;
 let latest_message_id;

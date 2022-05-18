@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="pl">
 
 <head>
 
@@ -8,6 +8,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Super Chat</title>
+  <link rel="stylesheet" href="css/global.css">
   <link rel="stylesheet" href="css/main.css">
 
 </head>
@@ -17,7 +18,7 @@
   <div id="mainWrapper">
     
       <div id="leftWrapper">
-        <div id="outputWrapper"></div>
+        <div id="outputContainer" class="genericContainer"></div>
     
         <div id="inputWrapper">
             <input id="textInput" type="text"><input id="sendButton" type="button" value="Wyślij">
@@ -26,7 +27,7 @@
 
       <div id="rightWrapper">
 
-        <div id="activeUsersWrapper">
+        <div id="activeUsersContainer" class="genericContainer">
           <h1>Aktywni użyktownicy</h1>
           <ul>
             <li>końik</li>
@@ -34,9 +35,19 @@
           </ul>
         </div>
 
+        <div id="loginOrRegisterContainer" class="genericContainer">
+          <div><a href="php/register/register.php">Zarejestruj się</a></div>
+          <div><a href="login.php">Zaloguj się</a></div>
+        </div>
+
       </div>
 
   </div>
+
+  
+  <input id="honeypot" type="text" style="display:none">
+  <a href="php/honeypot/honeypot.php" style="display:none"
+  rel="nofollow">BAN ME(ACCESSING THIS LINK WILL BAN YOU)</a>
 
 
   <?php 

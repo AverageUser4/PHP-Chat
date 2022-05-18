@@ -1,27 +1,3 @@
-/* universal selectors */
-* {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
-}
-
-body {
-  background-color: #333;
-}
-
-::-webkit-scrollbar {
-  width: 10px;
-}
-::-webkit-scrollbar-track {
-  background: #222;
-}
-::-webkit-scrollbar-thumb {
-  background: #353535;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #444;
-}
-
 /* important stuff */
 #mainWrapper {
   display: flex;
@@ -35,19 +11,14 @@ body {
   height: 100%;
 }
 
-#outputWrapper {
+#outputContainer {
   display: flex;
   flex-direction: column;
-  padding: 20px;
   width: 100%;
   height: 90%;
-  margin: auto;
   background-color: #0a0a0a;
-  border: 3px solid black;
   border-bottom: none;
-  box-sizing: border-box;
   font-size: 1rem;
-  color: #ccc;
   overflow: auto;
   & > div {
     border: 2px solid #555;
@@ -77,25 +48,9 @@ body {
   height: 10%;
   margin: auto;
   display: flex;
-  input {
-    display: block;
-    background-color: #111;
-    border-radius: 0;
-    outline: none;
-    border: 3px solid black;
-    box-sizing: border-box;
-    font-size: 2.2rem;
-    color: #ccc;
-    padding: 0 20px;
-    &:hover { background-color: #222; color: #ddd; }
-  }
   input[type=text] {
     width: 86%;
     border-right: none;
-    &:focus { background-color: #222; color: #ddd; }
-  }
-  input[type=button] {
-    &:hover { cursor: pointer; }
   }
 }
 
@@ -105,15 +60,11 @@ body {
   background-color: green;
 }
 
-#activeUsersWrapper {
-  background-color: #222;
+#activeUsersContainer {
   color: #ddd;
-  border: 3px solid black;
   border-left: none;
-  height: 100%;
+  height: 85%;
   width: 100%;
-  box-sizing: border-box;
-  padding: 20px;
   h1 {
     font-size: 1.35rem;
     text-align: center;
@@ -134,6 +85,20 @@ body {
       display: inline-block;
       vertical-align: middle;
     }
+  }
+}
+
+#loginOrRegisterContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-left: none;
+  border-top: none;
+  width: 100%;
+  height: 15%;
+  div {
+    font-size: 1.5rem;
+    text-align: center;
   }
 }
 

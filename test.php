@@ -1,4 +1,3 @@
 <?php
 
-
-//echo bin2hex(random_bytes(32));
+echo "\u{1f418}";
