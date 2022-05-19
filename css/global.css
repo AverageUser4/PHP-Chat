@@ -19,6 +19,39 @@ a:hover {
   text-decoration: underline;
 }
 
+input[type=range] {
+  -webkit-appearance: none;
+  appearance: none;
+  outline: 3px solid #666;
+  width: 100%;
+  height: 25px;
+  background-color: #777;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  /* Set a specific slider handle width */
+  height: 25px;
+  /* Slider handle height */
+  background: #555;
+  /* Green background */
+  cursor: pointer;
+  /* Cursor on hover */
+}
+
+input[type=range]::-moz-range-thumb {
+  width: 25px;
+  /* Set a specific slider handle width */
+  height: 25px;
+  /* Slider handle height */
+  background: #555;
+  /* Green background */
+  cursor: pointer;
+  /* Cursor on hover */
+}
+
 ::-webkit-scrollbar {
   width: 10px;
 }

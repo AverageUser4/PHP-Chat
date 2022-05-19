@@ -35,10 +35,28 @@
           </ul>
         </div>
 
+        <div>
+          <button id="colorOpenButton">Otwórz wybór</button>
+        </div>
+
         <div id="loginOrRegisterContainer" class="genericContainer">
           <div><a href="php/register/register.php">Zarejestruj się</a></div>
           <div><a href="login.php">Zaloguj się</a></div>
         </div>
+
+      </div>
+
+      <div id="colorPickerContainer">
+
+        <div id="color"></div>
+
+        <div id="slidersContainer">
+          <input id="r" name="r" type="range" min="0" max="255" value="255">
+          <input id="g" name="g" type="range" min="0" max="255" value="255">
+          <input id="b" name="b" type="range" min="0" max="255" value="255">
+        </div>
+
+        <button id="colorCloseButton">X</button>
 
       </div>
 
@@ -71,6 +89,43 @@
   <script defer src="js/messages/s2_load_old_messages.js"></script>
   <script defer src="js/messages/s3_send_message.js"></script>
   <script defer src="js/messages/s4_load_new_messages.js"></script>
+
+  <script>
+
+    const color_picker = document.getElementById('colorPickerContainer');
+    const color_close_button = document.getElementById('colorCloseButton');
+    const color_open_button = document.getElementById('colorOpenButton');
+    color_open_button.addEventListener('click', openColorPicker);
+    color_close_button.addEventListener('click', closeColorPicker);
+    color_picker.addEventListener('click', (e) => e.stopPropagation());
+
+    function openColorPicker(e) {
+      e.stopPropagation();
+      color_picker.style.display = 'block';
+      window.addEventListener('click', closeColorPicker);
+    }
+
+    function closeColorPicker() {
+      color_picker.style.display = 'none';
+      window.removeEventListener('click', closeColorPicker);
+    }
+
+    const color = document.getElementById('color');
+    const r_slider = document.getElementById('r');
+    const g_slider = document.getElementById('g');
+    const b_slider = document.getElementById('b');
+    r_slider.addEventListener('input', updateColor);
+    g_slider.addEventListener('input', updateColor);
+    b_slider.addEventListener('input', updateColor);
+
+    function updateColor() {
+      const r = r_slider.value;
+      const g = g_slider.value;
+      const b = b_slider.value;
+      color.style.backgroundColor = `rgb(${r},${g},${b})`;
+    }
+
+  </script>
 
 </body>
 

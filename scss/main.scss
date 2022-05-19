@@ -1,9 +1,10 @@
-/* important stuff */
+/* general structure */
 #mainWrapper {
   display: flex;
   width: min(1200px, 90vw);
   height: 80vh;
   margin: 10vh auto 0;
+  position: relative;
 }
 
 #leftWrapper {
@@ -11,6 +12,22 @@
   height: 100%;
 }
 
+#rightWrapper {
+  width: 30%;
+  height: 100%;
+  background-color: green;
+}
+
+@media screen and (max-width: 970px) {
+  #leftWrapper { width: 100%; }
+  #rightWrapper { display: none; }
+}
+
+@media screen and (max-width: 700px) {
+  #mainWrapper { width: 100%; height: 100vh; margin: 0 auto; }
+}
+
+/* all the messages */
 #outputContainer {
   display: flex;
   flex-direction: column;
@@ -21,11 +38,19 @@
   font-size: 1rem;
   overflow: auto;
   & > div {
+    display: flex;
     border: 2px solid #555;
     border-radius: 5px;
     margin-bottom: 15px;
     padding: 8px;
     line-height: 130%;
+    img { 
+      width: 50px;
+      height: 50px;
+      display: block;
+      margin-right: 10px;
+      border-radius: 50%;
+    }
     h3, h4 { display: inline-block;  }
     h3 {
       margin-right: 10px;
@@ -43,6 +68,7 @@
   }
 }
 
+/* text field and button for sending messages */
 #inputWrapper {
   width: 100%;
   height: 10%;
@@ -54,12 +80,7 @@
   }
 }
 
-#rightWrapper {
-  width: 30%;
-  height: 100%;
-  background-color: green;
-}
-
+/* contains currently active users */
 #activeUsersContainer {
   color: #ddd;
   border-left: none;
@@ -88,6 +109,7 @@
   }
 }
 
+/* contains links to login and register pages */
 #loginOrRegisterContainer {
   display: flex;
   flex-direction: column;
@@ -102,11 +124,79 @@
   }
 }
 
-@media screen and (max-width: 970px) {
-  #leftWrapper { width: 100%; }
-  #rightWrapper { display: none; }
+
+/* profile picture color picker */
+#colorPickerContainer {
+  display: none;
+  box-sizing: border-box;
+  border: 8px solid #777;
+  width: 75%;
+  height: 60%;
+  position: absolute;
+  top: 50%; 
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 1) 0%,
+    rgba(255, 154, 0, 1) 10%,
+    rgba(208, 222, 33, 1) 20%,
+    rgba(79, 220, 74, 1) 30%,
+    rgba(63, 218, 216, 1) 40%,
+    rgba(47, 201, 226, 1) 50%,
+    rgba(28, 127, 238, 1) 60%,
+    rgba(95, 21, 242, 1) 70%,
+    rgba(186, 12, 248, 1) 80%,
+    rgba(251, 7, 217, 1) 90%,
+    rgba(255, 0, 0, 1) 100%
+  );
 }
 
-@media screen and (max-width: 700px) {
-  #mainWrapper { width: 100%; height: 100vh; margin: 0 auto; }
+#color {
+  width: 20%;
+  height: 20%;
+  background-color: white;
+  outline: 5px solid #777;
+  border: 1px solid #777;
+  box-sizing: border-box;
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  &:hover { cursor: pointer; }
+}
+
+#slidersContainer {
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+  width: 65%;
+  height: 45%;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  padding: 10px 30px;
+  box-sizing: border-box;
+  background-color: #333;
+  border: 3px solid #444;
+}
+
+#colorCloseButton {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 50px;
+  height: 50px;
+  background-color: #666;
+  border: 3px solid #444;
+  border-radius: 50%;
+  font-size: 1.7rem;
+  font-weight: bold;
+  color: #222;
+  &:hover {
+    background-color: #777;
+    color: #333;
+    cursor: pointer;
+  }
 }

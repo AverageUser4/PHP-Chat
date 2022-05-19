@@ -5,6 +5,10 @@
 const input_field = document.getElementById('textInput');
 const send_button = document.getElementById('sendButton');
 const honey_pot = document.getElementById('honeypot');
+const regexp = /\p{C}|\p{Z}|\u034f|\u115f|\u1160|\u17b4|\u17b5|\u180e|\u2800|\u3164|\uffa0/gu;
+const regexp_space = / /gu;
+const sent_messages_array = [];
+let index_of_message_to_show;
 let msg = '';
 let last_message_time = Date.now();
 let messages_per_minute = 0;
@@ -15,10 +19,15 @@ limit_ends_at = Date.now() + 60000; }, 60000);
 send_button.addEventListener('click', sendMessage);
 input_field.addEventListener('input', validateInput);
 window.addEventListener('keyup', keyUpReact);
+window.addEventListener('keydown', preventArrowDefault);
+
+function preventArrowDefault(event) {
+  if(event.key === 'ArrowUp' || event.key === 'ArrowDown')
+    event.preventDefault();
+}
 
 function keyUpReact(event) {
   // focus input field when one of the common keys is pressed
-
   if(event.altKey || event.ctrlKey)
     return;
 
@@ -34,8 +43,33 @@ function keyUpReact(event) {
       input_field.value += event.key;
       input_field.focus();
     }
-  else if(event.key === 'Escape')
+  else if(event.key === 'Escape') {
+    updateMessArr();
+    input_field.value = '';
     input_field.blur();
+  }
+  else if(event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+    if(sent_messages_array.length === 0)
+      return;
+    input_field.focus();
+
+    if(input_field.value !== '')
+      if(updateMessArr())
+      index_of_message_to_show--;
+
+    event.key === 'ArrowUp' ? index_of_message_to_show--
+    :  index_of_message_to_show++;
+
+    if(index_of_message_to_show < 0)
+      index_of_message_to_show = sent_messages_array.length - 1;
+    if(index_of_message_to_show > sent_messages_array.length - 1)
+      index_of_message_to_show = 0;
+
+    input_field.value = sent_messages_array[index_of_message_to_show];
+    return;
+  }
+
+  index_of_message_to_show = sent_messages_array.length;
 }
 
 function validateInput() {
@@ -69,10 +103,29 @@ function validateInput() {
   }
 }
 
+function updateMessArr(enter_invoked = false) {
+  const swap_index = sent_messages_array.indexOf(input_field.value);
+  if(swap_index !== -1) {
+    if(enter_invoked) {
+      const val = sent_messages_array.splice(swap_index, 1);
+      sent_messages_array.push(val[0]);
+    }
+    return false;
+  }
+  sent_messages_array.push(input_field.value);
+  if(sent_messages_array.length > 100)
+    sent_messages_array.shift();
+  index_of_message_to_show = sent_messages_array.length;
+  return true;
+}
+
 function sendMessage() {
   // send message unless it's empty string or consists only of spaces
   // also some spam protection
   if(honey_pot.value !== '')
+    return;
+
+  if(input_field.value === '')
     return;
 
   if(Date.now() - last_message_time < 300)
@@ -85,11 +138,25 @@ function sendMessage() {
     return;
   }
 
+  updateMessArr(true);
   msg = input_field.value;
   input_field.value = '';
 
-  if(msg === '' || (msg.indexOf(' ') !== -1 && msg.match(/ /g).length === msg.length))
+  let char_test = msg.match(regexp);
+  if(char_test !== null) {
+    let space_test = msg.match(regexp_space);
+    if(space_test === null || char_test.length > space_test.length) {
+      if(confirm('Twoja wiadomość zawiera niedozwolone znaki. Czy chcesz je zamienić na spacje?'))
+        msg = msg.replace(regexp, ' ');
+      else
+        return;
+    }
+  }
+
+  if(msg.indexOf(' ') !== -1 && msg.match(/ /g).length === msg.length) {
+    alert('Wiadomość nie może składać się z samych spacji.');
     return;
+  }
   
   sendRequest(sendMessageUpdate, 'php/messages/send_message.php',
   `user=${guest_name_encoded}&guest_id=${guest_id}&guest_token=${guest_token}&message=${encodeURIComponent(msg)}`);
@@ -106,9 +173,14 @@ function sendMessageUpdate() {
   const div = document.createElement('DIV');
 
   div.innerHTML =
-  `<h3>${guest_name}</h3>
+  `
+  <img draggable="false" src="resources/pp_male.jpg">
+  <div>
+  <h3>${guest_name}</h3>
   <h4>${new Date().toLocaleString()}</h4>
-  <p>${msg.replace(/</g, '&lt;')}</p>`;
+  <p>${msg.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</p>
+  </div>
+  `;
 
   output_container.appendChild(div);
   output_container.scrollTo(0, 999999);
