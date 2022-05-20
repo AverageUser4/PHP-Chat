@@ -32,24 +32,16 @@ input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 25px;
-  /* Set a specific slider handle width */
   height: 25px;
-  /* Slider handle height */
   background: #555;
-  /* Green background */
   cursor: pointer;
-  /* Cursor on hover */
 }
 
 input[type=range]::-moz-range-thumb {
   width: 25px;
-  /* Set a specific slider handle width */
   height: 25px;
-  /* Slider handle height */
   background: #555;
-  /* Green background */
   cursor: pointer;
-  /* Cursor on hover */
 }
 
 ::-webkit-scrollbar {

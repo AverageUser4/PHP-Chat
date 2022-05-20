@@ -170,18 +170,7 @@ function sendMessageUpdate() {
     return;
   }
 
-  const div = document.createElement('DIV');
-
-  div.innerHTML =
-  `
-  <img draggable="false" src="resources/pp_male.jpg">
-  <div>
-  <h3>${guest_name}</h3>
-  <h4>${new Date().toLocaleString()}</h4>
-  <p>${msg.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</p>
-  </div>
-  `;
-
-  output_container.appendChild(div);
+  createMessageElement(guest_name, new Date().toLocaleString(),
+  msg.replace(/&/g, '&amp;').replace(/</g, '&lt;'), true);
   output_container.scrollTo(0, 999999);
 }

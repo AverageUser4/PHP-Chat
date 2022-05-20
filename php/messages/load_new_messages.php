@@ -12,7 +12,7 @@ function sse_failure($e) {
   exit();
 }
 
-function shutdownHandler() {
+function sse_shutdownHandler() {
   if(connection_aborted())
     return;
 
@@ -33,7 +33,7 @@ function shutdownHandler() {
   else
     echo "id: unexpected\n\n";
 }
-register_shutdown_function('shutdownHandler');
+register_shutdown_function('sse_shutdownHandler');
 
 
 //////////////////////////////////////////////

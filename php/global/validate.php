@@ -30,6 +30,7 @@ function valid_username($user) {
     mb_strlen($user, 'UTF-8') == 0
     || mb_strlen($user, 'UTF-8') > 32
     || preg_match_all($safe_chars_regex, $user) > preg_match_all('/ /', $user)
+    || strlen(trim($user)) === 0
     )
     return false;
   return true;
@@ -41,24 +42,37 @@ function valid_message($msg) {
     mb_strlen($msg, 'UTF-8') == 0
     || mb_strlen($msg, 'UTF-8') > 256
     || preg_match_all($safe_chars_regex, $msg) > preg_match_all('/ /', $msg)
+    || strlen(trim($msg)) === 0
     )
     return false;
   return true;
 }
 
-function valid_guest_token($guest_token) {
+function valid_guest_token() {
+  $token = $_COOKIE['guest_token'] ?? null;
   if(
-    mb_strlen($guest_token, 'UTF-8') != 64
-    || !ctype_alnum($guest_token)
+    is_null($token)
+    || mb_strlen($token, 'UTF-8') != 64
+    || !ctype_alnum($token)
     )
     return false;
   return true;
 }
 
 function valid_int($int) {
+  if(!filter_var($int, FILTER_VALIDATE_INT))
+    return false;
+  return true;
+}
+
+function valid_color($color_str) {
+  $arr = explode(',', $color_str);
   if(
-    !filter_var($int, FILTER_VALIDATE_INT, 
-    [FILTER_FLAG_ALLOW_HEX => false, FILTER_FLAG_ALLOW_OCTAL => false])
+    count($arr) !== 4
+    || !filter_var($arr[0], FILTER_VALIDATE_INT, ['min_range' => 0, 'max_range' => 255])
+    || !filter_var($arr[1], FILTER_VALIDATE_INT, ['min_range' => 0, 'max_range' => 255])
+    || !filter_var($arr[2], FILTER_VALIDATE_INT, ['min_range' => 0, 'max_range' => 255])
+    || !filter_var($arr[3], FILTER_VALIDATE_FLOAT, ['min_range' => 0, 'max_range' => 1])
     )
     return false;
   return true;

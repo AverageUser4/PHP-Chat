@@ -11,13 +11,9 @@ getMessagesWhenLoaded();
 function getMessagesWhenLoaded() {
   // insert messages we asked for into the output field
 
-  //const arr = this.responseText.split('%');
   const arr = document.getElementById('old_mes_data').innerHTML.split('%');
 
-  if(arr[0] === 'error') {
-    alert(arr[1]);
-    return;
-  }
+  if(arr[0] === 'error') { alert(arr[1]); return; }
   
   let len = arr.length;
   let server_time = arr[0];
@@ -30,16 +26,8 @@ function getMessagesWhenLoaded() {
   if(len === 153)
     output_container.addEventListener('scroll', scrolledToTop);
   
-  for(let i = 3; i < len; i += 3) {
-    const div = document.createElement('DIV');
-
-    div.innerHTML =
-    `<h3>${arr[i]}</h3>
-    <h4>${parseMessageDate(arr[i + 2])}</h4>
-    <p>${arr[i + 1]}</p>`;
-
-    output_container.insertBefore(div, output_container.firstChild);
-  }
+  for(let i = 3; i < len; i += 3)
+    createMessageElement(arr[i], parseMessageDate(arr[i + 2]), arr[i + 1], false);
 
   output_container.scrollTo(0, 999999);
 }
@@ -57,7 +45,7 @@ function scrolledToTop() {
   if(!no_more_old_messages && old_messages_array.length === 0)
     sendRequest(readIncomingOldMessages, 'php/messages/load_old_messages.php', `oldest=${oldest_message_id}`);
   else
-    loadOldMessage();
+    updateOldMessage();
 }
 
 function readIncomingOldMessages() {
@@ -79,21 +67,19 @@ function readIncomingOldMessages() {
 
   old_messages_array.shift();
 
-  loadOldMessage();
+  updateOldMessage();
 }
 
-function loadOldMessage() {
+function updateOldMessage() {
   // when users scrolls to top, one message from array is inserted at once
 
   let init_height = output_container.scrollHeight;
 
   if(old_messages_array.length >= 3) {
-    const div = document.createElement('DIV');
     const h3 = old_messages_array.shift();
     const p = old_messages_array.shift();
     const h4 = parseMessageDate(old_messages_array.shift());
-    div.innerHTML = `<h3>${h3}</h3><h4>${h4}</h4><p>${p}</p>`;
-    output_container.insertBefore(div, output_container.firstChild);
+    createMessageElement(h3, h4, p, false)
   }
 
   if(no_more_old_messages && old_messages_array.length === 0)

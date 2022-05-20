@@ -35,8 +35,8 @@
           </ul>
         </div>
 
-        <div>
-          <button id="colorOpenButton">Otwórz wybór</button>
+        <div id="optionsContainer" class="genericContainer">
+          <button id="colorOpenButton">Zmień kolor zdjęcia profilowego</button>
         </div>
 
         <div id="loginOrRegisterContainer" class="genericContainer">
@@ -48,13 +48,33 @@
 
       <div id="colorPickerContainer">
 
-        <div id="color"></div>
+        <div id="colorContainer">
+          <img src="resources/pp_male.jpg">
+          <div id="color"></div>
+        </div>
 
         <div id="slidersContainer">
           <input id="r" name="r" type="range" min="0" max="255" value="255">
           <input id="g" name="g" type="range" min="0" max="255" value="255">
           <input id="b" name="b" type="range" min="0" max="255" value="255">
+          <input id="a" name="a" type="range" min="0" max="1" value="0.5" step="0.1">
         </div>
+
+        <div id="sliderNamesContainer">
+          <p>Red</p>
+          <p>Green</p>
+          <p>Blue</p>
+          <p>Alpha</p>
+        </div>
+
+        <div id="valuesContainer">
+          <p id="rVal">R: 255</p>
+          <p id="gVal">G: 255</p>
+          <p id="bVal">B: 255</p>
+          <p id="aVal">A: 0.5</p>
+        </div>
+
+        <div id="randomColorButton">Random</div>
 
         <button id="colorCloseButton">X</button>
 
@@ -62,6 +82,7 @@
 
   </div>
 
+  <style id="usersPicturesColors"></style>
   
   <input id="honeypot" type="text" style="display:none">
   <a href="php/honeypot/honeypot.php" style="display:none"
@@ -90,42 +111,7 @@
   <script defer src="js/messages/s3_send_message.js"></script>
   <script defer src="js/messages/s4_load_new_messages.js"></script>
 
-  <script>
-
-    const color_picker = document.getElementById('colorPickerContainer');
-    const color_close_button = document.getElementById('colorCloseButton');
-    const color_open_button = document.getElementById('colorOpenButton');
-    color_open_button.addEventListener('click', openColorPicker);
-    color_close_button.addEventListener('click', closeColorPicker);
-    color_picker.addEventListener('click', (e) => e.stopPropagation());
-
-    function openColorPicker(e) {
-      e.stopPropagation();
-      color_picker.style.display = 'block';
-      window.addEventListener('click', closeColorPicker);
-    }
-
-    function closeColorPicker() {
-      color_picker.style.display = 'none';
-      window.removeEventListener('click', closeColorPicker);
-    }
-
-    const color = document.getElementById('color');
-    const r_slider = document.getElementById('r');
-    const g_slider = document.getElementById('g');
-    const b_slider = document.getElementById('b');
-    r_slider.addEventListener('input', updateColor);
-    g_slider.addEventListener('input', updateColor);
-    b_slider.addEventListener('input', updateColor);
-
-    function updateColor() {
-      const r = r_slider.value;
-      const g = g_slider.value;
-      const b = b_slider.value;
-      color.style.backgroundColor = `rgb(${r},${g},${b})`;
-    }
-
-  </script>
+  <script defer src="js/pp_color/s1_color_global.js"></script>
 
 </body>
 

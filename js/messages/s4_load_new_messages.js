@@ -38,14 +38,7 @@ function appendNewMessages(event) {
   }
 
   for(let i = 0; i < arr.length; i += 3) {
-    const div = document.createElement('DIV');
-
-    div.innerHTML =
-    `<h3>${arr[i]}</h3>
-    <h4>${parseMessageDate(arr[i + 2])}</h4>
-    <p>${arr[i + 1]}</p>`;
-    
-    output_container.appendChild(div);
+    createMessageElement(arr[i], parseMessageDate(arr[i + 2]), arr[i + 1], true);
   }
 }
 
