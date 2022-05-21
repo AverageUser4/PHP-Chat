@@ -8,7 +8,6 @@ let oldest_message_id;
 let latest_message_id;
 //adjust message's date to client's timezone
 let client_server_time_difference = 0;
-const all_users_color_data = new Map();
 
 
 /* adjust message's date to client's timezone */
@@ -28,35 +27,18 @@ function parseMessageDate(initial_date) {
 
 /* create element containing single message */
 function createMessageElement(name, date, message, append) {
-  if(all_users_color_data.has(name)) {
-    console.log(all_users_color_data);
-    actuallyCreateMessageElement(name, date, message, append);
-    return;
-  }
-  sendRequest(
-    function () {
-      if(this.responseText.startsWith('error%')) {
-        console.log(this.responseText.slice(6));
-        all_users_color_data.set(name, '0,0,0,0');
-      }
-      all_users_color_data.set(name, this.responseText);
-      actuallyCreateMessageElement(name, date, message, append);
-    },
-    'php/accounts/get_user_color.php', `username=${encodeURIComponent(name)}`
-  );
-}
 
-function actuallyCreateMessageElement(name, date, message, append) {
-  const class_name = 'usc' + all_users_color_data
-  .get(name).replace('.', '').replace(',', '');
+  let class_name = createColorClass(name)
+  if(!class_name)
+    class_name = all_users_color_data.get(name);
 
   const div = document.createElement('DIV');
 
   div.innerHTML =
   `
-  <div class="imgContainer ${class_name}">
+  <div class="imgContainer">
     <img draggable="false" src="resources/pp_male.jpg">
-    <div class="imgColor"></div>
+    <div class="imgColor ${class_name}"></div>
   </div>
   <div>
     <h3>${name}</h3>

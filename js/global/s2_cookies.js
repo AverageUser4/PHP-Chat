@@ -1,3 +1,5 @@
+"use strict";
+
 const arr = document.getElementById('guest_data').innerHTML.split('%');
 const guest_id = arr[0];
 const guest_name = `Gość ${guest_id}`;

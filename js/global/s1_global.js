@@ -1,3 +1,5 @@
+"use strict";
+
 /* generic function for sending xmlhttp requests */
 
 function sendRequest(callback, file, params = '', method = 'GET') {

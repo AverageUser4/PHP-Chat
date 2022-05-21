@@ -1,6 +1,6 @@
 <?php
 
-set_time_limit(3);
+set_time_limit(30);
 set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat/php');
 
 function guc_shutdown_handler() {

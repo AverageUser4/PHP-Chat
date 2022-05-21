@@ -28,7 +28,12 @@ if(valid_guest_token()) {
 // if there's no token or it's invalid, create new one and return it
 $new_token = bin2hex(random_bytes(32));
 
-$PDO_stm = $PDO -> prepare('INSERT INTO guests VALUES (null, :new_token, :ip, male, "0,0,0,0")');
+$r = random_int(0, 255);
+$g = random_int(0, 255);
+$b = random_int(0, 255);
+$a = random_int(3, 6) / 10;
+
+$PDO_stm = $PDO -> prepare("INSERT INTO guests VALUES (null, :new_token, :ip, 'male', '$r,$g,$b,$a')");
 $PDO_stm -> bindParam(':new_token', $new_token, PDO::PARAM_STR);
 $PDO_stm -> bindParam(':ip', $ip, PDO::PARAM_STR);
 if(!$PDO_stm -> execute())

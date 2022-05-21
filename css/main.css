@@ -55,28 +55,33 @@
   line-height: 130%;
 }
 #outputContainer > div .imgContainer {
+  flex-shrink: 0;
   width: 50px;
   height: 50px;
   margin-right: 10px;
   position: relative;
+  box-sizing: border-box;
+  border: 2px solid #555;
+  border-radius: 50%;
+  user-select: none;
 }
 #outputContainer > div img {
-  width: 50px;
-  height: 50px;
+  width: 100%;
+  height: 100%;
   display: block;
   border-radius: 50%;
 }
 #outputContainer > div .imgColor {
-  width: 50px;
-  height: 50px;
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
   position: absolute;
   top: 0;
   left: 0;
-  background-color: rgba(28, 127, 238, 0.3);
 }
 #outputContainer > div h3, #outputContainer > div h4 {
   display: inline-block;
+  user-select: none;
 }
 #outputContainer > div h3 {
   margin-right: 10px;
@@ -287,9 +292,8 @@
   box-sizing: border-box;
 }
 
-#randomColorButton {
+#randomColorButton, #applyButton {
   position: absolute;
-  left: 10px;
   bottom: 10px;
   background-color: #666;
   border: 3px solid #444;
@@ -297,9 +301,17 @@
   font-weight: bold;
   padding: 5px 10px;
 }
-#randomColorButton:hover {
+#randomColorButton:hover, #applyButton:hover {
   background-color: #777;
   cursor: pointer;
+}
+
+#randomColorButton {
+  left: 10px;
+}
+
+#applyButton {
+  right: 10px;
 }
 
 /*# sourceMappingURL=main.css.map */

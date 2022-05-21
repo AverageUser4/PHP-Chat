@@ -74,7 +74,8 @@
           <p id="aVal">A: 0.5</p>
         </div>
 
-        <div id="randomColorButton">Random</div>
+        <div id="randomColorButton">Losuj</div>
+        <div id="applyButton">Zmień</div>
 
         <button id="colorCloseButton">X</button>
 
@@ -112,6 +113,8 @@
   <script defer src="js/messages/s4_load_new_messages.js"></script>
 
   <script defer src="js/pp_color/s1_color_global.js"></script>
+
+  <script defer src="js/run_when_loaded.js"></script>
 
 </body>
 

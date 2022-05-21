@@ -1,10 +1,7 @@
 "use strict";
 
-
 let old_messages_array = [];
 let no_more_old_messages = false;
-getMessagesWhenLoaded();
-
 
 /* ask for 50 latest messages from database when document is loaded */
 

@@ -45,13 +45,8 @@
     form.addEventListener('submit', validateForm);
 
     function validateForm(event) {
-      let i = 0;
-      console.log('ok');
-      while(1) {
-        i++;
-        if(i > 1000000000)
-          break;
-      }
+
+      
       event.preventDefault();
     }
 

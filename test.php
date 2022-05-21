@@ -1,13 +1,4 @@
 <?php
 
 
-// U+034f
-// U+115f
-// U+1160
-// U+17b4
-// U+17b5
-// U+180e
-// U+2800
-// U+3164
-// U+ffa0
-
+echo var_dump(filter_var('dość@gamil.com', FILTER_VALIDATE_EMAIL));
