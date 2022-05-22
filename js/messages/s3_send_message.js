@@ -5,8 +5,6 @@
 const input_field = document.getElementById('textInput');
 const send_button = document.getElementById('sendButton');
 const honey_pot = document.getElementById('honeypot');
-const regexp = /\p{C}|\p{Z}|\u034f|\u115f|\u1160|\u17b4|\u17b5|\u180e|\u2800|\u3164|\uffa0/gu;
-const regexp_space = / /gu;
 const sent_messages_array = [];
 let index_of_message_to_show;
 let msg = '';
@@ -142,15 +140,11 @@ function sendMessage() {
   msg = input_field.value;
   input_field.value = '';
 
-  let char_test = msg.match(regexp);
-  if(char_test !== null) {
-    let space_test = msg.match(regexp_space);
-    if(space_test === null || char_test.length > space_test.length) {
-      if(confirm('Twoja wiadomość zawiera niedozwolone znaki. Czy chcesz je zamienić na spacje?'))
-        msg = msg.replace(regexp, ' ');
-      else
-        return;
-    }
+  if(!validChars(msg)) {
+    if(confirm('Twoja wiadomość zawiera niedozwolone znaki. Czy chcesz je zamienić na spacje?'))
+      msg = msg.replace(safe_chars_regexp, ' ');
+    else
+      return;
   }
 
   if(msg.indexOf(' ') !== -1 && msg.match(/ /g).length === msg.length) {

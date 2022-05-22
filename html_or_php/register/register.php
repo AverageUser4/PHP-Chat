@@ -15,9 +15,11 @@
 
 <body>
   
+  <h1><a href="../../index.php">Super Chat</a> - rejestracja</h1>
+
   <div id="formContainer">
 
-    <form id="registerForm" action="register_script.php" method="post">
+    <form novalidate id="registerForm" method="post">
 
       <label for="email">Adres e-mail:</label>
       <input id="email" type="email" name="email">
@@ -31,26 +33,25 @@
       <label for="pass2">Powtórz hasło:</label>
       <input id="pass2" type="password" name="password2">
 
+      <label for="gender">Wybierz płeć:</p>
+      <select id="gender" name="gender">
+        <option value="male">Mężczyzna</option>
+        <option value="female">Kobieta</option>
+        <option selected value="other">Inna</option>
+      </select>
+      
       <input type="submit" value="Zarejestruj się">
-
-      <p>Rejestrując się akceptujesz <a href="regulamin.txt">regulamin.</a></p>
+      
+      <p id="registerPTag">Rejestrując się akceptujesz <a href="regulamin.txt">regulamin.</a></p>
       
     </form>
 
   </div>
 
-  <script>
-
-    const form = document.getElementById('registerForm');
-    form.addEventListener('submit', validateForm);
-
-    function validateForm(event) {
-
-      
-      event.preventDefault();
-    }
-
-  </script>
+  <script defer src="../../js/global/s1_global.js"></script>
+  <script defer src="../../js/global/s3_validate.js"></script>
+  
+  <script defer src="../../js/accounts/s1_register_validate.js"></script>
 
 </body>
 

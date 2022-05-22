@@ -13,6 +13,31 @@ function get_exists(array $arr) {
   return true;
 }
 
+function post_exists(array $arr) {
+  foreach($arr as $x) {
+    if(!isset($_POST[$x]))
+      return false;
+  }
+  return true;
+}
+
+function valid_byte_length($subject, $min, $max) {
+  $len = strlen($subject);
+  if($len < $min || $len > $max)
+    return false;
+  return true;
+}
+
+function valid_chars($subject) {
+  global $safe_chars_regex;
+  if(
+      preg_match_all($safe_chars_regex, $subject) > preg_match_all('/ /', $subject)
+      || strlen(trim($subject)) === 0
+    )
+    return false;
+  return true;
+}
+
 function customEntities($str) {
   //% is used as separator when sending message data
   $str = str_replace('%', '&#37;', $str);
@@ -24,25 +49,31 @@ function customEntities($str) {
   return $str;
 }
 
+function valid_email($email) {
+  if(!filter_var($email, FILTER_VALIDATE_EMAIL))
+    return false;
+  return true;
+}
+
 function valid_username($user) {
-  global $safe_chars_regex;
   if(
-    mb_strlen($user, 'UTF-8') == 0
-    || mb_strlen($user, 'UTF-8') > 32
-    || preg_match_all($safe_chars_regex, $user) > preg_match_all('/ /', $user)
-    || strlen(trim($user)) === 0
+    !valid_byte_length($user, 3, 32)
+    || !valid_chars($user)
     )
     return false;
   return true;
 }
 
+function valid_password($password) {
+  if(!valid_byte_length($password, 5, 256))
+    return false;
+  return true;
+}
+
 function valid_message($msg) {
-  global $safe_chars_regex;
   if(
-    mb_strlen($msg, 'UTF-8') == 0
-    || mb_strlen($msg, 'UTF-8') > 256
-    || preg_match_all($safe_chars_regex, $msg) > preg_match_all('/ /', $msg)
-    || strlen(trim($msg)) === 0
+    !valid_byte_length($msg, 1, 256)
+    || !valid_chars($msg)
     )
     return false;
   return true;
@@ -52,7 +83,7 @@ function valid_guest_token() {
   $token = $_COOKIE['guest_token'] ?? null;
   if(
     is_null($token)
-    || mb_strlen($token, 'UTF-8') != 64
+    || !valid_byte_length($token, 64, 64)
     || !ctype_alnum($token)
     )
     return false;
@@ -76,4 +107,10 @@ function valid_color($color_str) {
     )
     return false;
   return true;
+}
+
+function sanitize_gender($gender) {
+  if($gender === 'male')return 'male';
+  if($gender === 'female')return 'female';
+  return 'other';
 }

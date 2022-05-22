@@ -4,6 +4,11 @@
   background: #555;
   cursor: pointer;
 }
+@mixin for-autofill($background, $font) {
+  -webkit-box-shadow: 0 0 0 1000px $background inset !important;
+  box-shadow: 0 0 0 1000px $background inset !important;
+  -webkit-text-fill-color: $font !important;
+}
 
 /* universal selectors */
 * {
@@ -49,7 +54,8 @@ input[type=text],
 input[type=password],
 input[type=email],
 input[type=button],
-input[type=submit] {
+input[type=submit],
+select {
   display: block;
   background-color: #111;
   border-radius: 0;
@@ -60,14 +66,22 @@ input[type=submit] {
   color: #ccc;
   padding: 0 20px;
   &:hover { background-color: #222; color: #ddd; }
+  &:focus { background-color: #252525; color: #ddd; }
 }
-
-input[type=text],
-input[type=password],
-input[type=email] { &:focus { background-color: #252525; color: #ddd; } }
-
 input[type=button],
 input[type=submit] { &:hover { cursor: pointer; } &:active {background-color: #252525;}}
+
+input:-webkit-autofill {
+  @include for-autofill($background: #111, $font: #ccc);
+}
+input:hover:-webkit-autofill {
+  @include for-autofill($background: #222, $font: #ddd);
+}
+input[type=text]:focus:-webkit-autofill,
+input[type=password]:focus:-webkit-autofill,
+input[type=email]:focus:-webkit-autofill {
+  @include for-autofill($background: #252525, $font: #ddd);
+}
 
 
 /* classes */

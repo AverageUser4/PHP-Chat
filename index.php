@@ -40,7 +40,7 @@
         </div>
 
         <div id="loginOrRegisterContainer" class="genericContainer">
-          <div><a href="php/register/register.php">Zarejestruj się</a></div>
+          <div><a href="html_or_php/register/register.php">Zarejestruj się</a></div>
           <div><a href="login.php">Zaloguj się</a></div>
         </div>
 
@@ -106,6 +106,7 @@
 
   <script defer src="js/global/s1_global.js"></script>
   <script defer src="js/global/s2_cookies.js"></script>
+  <script defer src="js/global/s3_validate.js"></script>
 
   <script defer src="js/messages/s1_messages_global.js"></script>
   <script defer src="js/messages/s2_load_old_messages.js"></script>

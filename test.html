@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TEST</title>
+</head>
+<body>
+  
+  <form action="test.php" method="post">
+    <input type="text" name="test" id="test">
+    <input type="submit">
+  </form>
+
+  <script>
+    function sendRequest(callback, file, params = '', method = 'GET') {
+      const xmlhttp = new XMLHttpRequest();
+
+      xmlhttp.onload = callback;
+
+      if(method === 'GET') {
+        xmlhttp.open(method, file + '?' + params);
+        xmlhttp.send();
+      }
+      else {
+        xmlhttp.open(method, file);
+        xmlhttp.send(params);
+      }
+    }
+
+    function testowa(event) {
+      event.preventDefault();
+      form_data = new FormData();
+      form_data.append('test', text_input.value);
+      sendRequest(odbierz, 'test.php', form_data, 'POST');
+    }
+
+    function odbierz() {
+      console.log(this.responseText);
+    }
+
+    const text_input = document.getElementById('test');
+    const form = document.getElementsByTagName('FORM')[0];
+    form.addEventListener('submit', testowa);
+
+
+  </script>
+
+</body>
+</html>

@@ -64,7 +64,8 @@ input[type=text],
 input[type=password],
 input[type=email],
 input[type=button],
-input[type=submit] {
+input[type=submit],
+select {
   display: block;
   background-color: #111;
   border-radius: 0;
@@ -79,14 +80,17 @@ input[type=text]:hover,
 input[type=password]:hover,
 input[type=email]:hover,
 input[type=button]:hover,
-input[type=submit]:hover {
+input[type=submit]:hover,
+select:hover {
   background-color: #222;
   color: #ddd;
 }
-
 input[type=text]:focus,
 input[type=password]:focus,
-input[type=email]:focus {
+input[type=email]:focus,
+input[type=button]:focus,
+input[type=submit]:focus,
+select:focus {
   background-color: #252525;
   color: #ddd;
 }
@@ -98,6 +102,26 @@ input[type=submit]:hover {
 input[type=button]:active,
 input[type=submit]:active {
   background-color: #252525;
+}
+
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #111 inset !important;
+  box-shadow: 0 0 0 1000px #111 inset !important;
+  -webkit-text-fill-color: #ccc !important;
+}
+
+input:hover:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #222 inset !important;
+  box-shadow: 0 0 0 1000px #222 inset !important;
+  -webkit-text-fill-color: #ddd !important;
+}
+
+input[type=text]:focus:-webkit-autofill,
+input[type=password]:focus:-webkit-autofill,
+input[type=email]:focus:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #252525 inset !important;
+  box-shadow: 0 0 0 1000px #252525 inset !important;
+  -webkit-text-fill-color: #ddd !important;
 }
 
 /* classes */

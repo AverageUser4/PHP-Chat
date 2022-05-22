@@ -6,14 +6,14 @@ require_once 'global/validate.php';
 
 if(!isset($_SERVER['REMOTE_ADDR']) 
   || !filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP)
-  ) $ip = 'unknown';
+  ) $ip = 'null';
 else $ip = $_SERVER['REMOTE_ADDR'];
 
 
 // if there's valid token return it to the user
 require_once 'global/pdo_connect.php';
 if(!$PDO instanceof PDO)
-failure_return($PDO);
+  failure_return($PDO);
 
 if(valid_guest_token()) {
   $PDO_stm = $PDO -> prepare("SELECT * FROM guests WHERE token = :token");
@@ -25,27 +25,35 @@ if(valid_guest_token()) {
     return $result[0] . '%' . $result[1];
 }
 
+require_once 'accounts/reusable.php';
+
+/*
+- jeżeli jest access token, zaloguj użytkownika
+
+
+*/
+
 // if there's no token or it's invalid, create new one and return it
-$new_token = bin2hex(random_bytes(32));
+// $new_token = bin2hex(random_bytes(32));
 
-$r = random_int(0, 255);
-$g = random_int(0, 255);
-$b = random_int(0, 255);
-$a = random_int(3, 6) / 10;
+// $r = random_int(0, 255);
+// $g = random_int(0, 255);
+// $b = random_int(0, 255);
+// $a = random_int(3, 6) / 10;
 
-$PDO_stm = $PDO -> prepare("INSERT INTO guests VALUES (null, :new_token, :ip, 'male', '$r,$g,$b,$a')");
-$PDO_stm -> bindParam(':new_token', $new_token, PDO::PARAM_STR);
-$PDO_stm -> bindParam(':ip', $ip, PDO::PARAM_STR);
-if(!$PDO_stm -> execute())
-  failure_return('Nie udało się dodać do bazy.');
+// $PDO_stm = $PDO -> prepare("INSERT INTO guests VALUES (null, :new_token, :ip, 'male', '$r,$g,$b,$a')");
+// $PDO_stm -> bindParam(':new_token', $new_token, PDO::PARAM_STR);
+// $PDO_stm -> bindParam(':ip', $ip, PDO::PARAM_STR);
+// if(!$PDO_stm -> execute())
+//   failure_return('Nie udało się dodać do bazy.');
 
-$PDO_stm = $PDO -> query("SELECT * FROM guests WHERE token = '$new_token'", PDO::FETCH_NUM);
-$result = $PDO_stm -> fetch(PDO::FETCH_NUM);
+// $PDO_stm = $PDO -> query("SELECT * FROM guests WHERE token = '$new_token'", PDO::FETCH_NUM);
+// $result = $PDO_stm -> fetch(PDO::FETCH_NUM);
 
-if($result)
-  return $result[0] . '%' . $result[1];
+// if($result)
+//   return $result[0] . '%' . $result[1];
 
-failure_return('Poważny błąd z bazą danych!!!!!');
+// failure_return('Poważny błąd z bazą danych!!!!!');
 
 
 

@@ -1,7 +1,8 @@
 <?php
 
-if(!isset($_SERVER['REMOTE_ADDR'])
-  || !filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP)
+if(
+    !isset($_SERVER['REMOTE_ADDR'])
+    || !filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP)
   )
   return;
 
