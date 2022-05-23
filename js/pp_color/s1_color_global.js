@@ -77,7 +77,7 @@ function requestColorUpdate() {
     return;
   current_color = new_color;
 
-  sendRequest(updateProfilePicture, 'php/accounts/profile_customize.php',
+  sendRequest(updateProfilePicture, '../php/accounts/profile_customize.php',
   `color=${new_color}`);
 }
 
@@ -106,7 +106,7 @@ function createColorClass(name) {
   sendRequest
   (
     function () { updateClassColor(name, this.responseText) },
-    'php/accounts/get_user_color.php',
+    '../php/accounts/get_user_color.php',
     `username=${encodeURIComponent(name)}`
   );
 

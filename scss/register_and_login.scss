@@ -22,6 +22,9 @@ h1 {
       font-size: 1.2rem;
       user-select: none;
       display: block;
+      span {
+        color: #bd3115;
+      }
     }
     input, select {
       font-size: 1.4rem;
@@ -36,6 +39,7 @@ h1 {
     p {
       text-align: center; 
       font-size: 1.2rem;
+      &:first-of-type { margin-bottom: 5px; }
       a { text-decoration: underline; }
     }
   }

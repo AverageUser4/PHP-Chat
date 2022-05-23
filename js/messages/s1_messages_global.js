@@ -37,7 +37,7 @@ function createMessageElement(name, date, message, append) {
   div.innerHTML =
   `
   <div class="imgContainer">
-    <img draggable="false" src="resources/pp_male.jpg">
+    <img draggable="false" src="../resources/pp_male.jpg">
     <div class="imgColor ${class_name}"></div>
   </div>
   <div>

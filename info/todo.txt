@@ -6,3 +6,11 @@
 - admin accounts
 - different channels
 - check if sse ends script correctly
+
+!!!!!!
+new users names are getting saved in database without changing unsafe
+characters to html entities
+!!!!!!!
+
+- po pobraniu document root z serwera wszystkie ścieżki mogą się zaczynać w tym samym miejscu
+- obecnie każdy może się zalogować na każde konto gościa

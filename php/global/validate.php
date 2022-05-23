@@ -1,9 +1,16 @@
 <?php
 
+set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat/php');
 $safe_chars_regex = "/[\p{C}\p{Z}\u{034f}\u{115f}\u{1160}\u{17b4}\u{17b5}\u{180e}\u{2800}\u{3164}\u{ffa0}]/u";
 
 function failure($e) { echo 'error%' . $e; exit(); }
 function failure_return($e) { return 'error%' . $e; }
+function something_went_wrong($info) {
+  session_start();
+  $_SESSION['sww_err'] = $info;
+  header('Location: ../html_or_php/something_went_wrong.php');
+  exit();
+}
 
 function get_exists(array $arr) {
   foreach($arr as $x) {
@@ -59,6 +66,8 @@ function valid_username($user) {
   if(
     !valid_byte_length($user, 3, 32)
     || !valid_chars($user)
+    || str_starts_with($user, 'Gość')
+    || str_contains($user, '@')
     )
     return false;
   return true;
@@ -79,8 +88,8 @@ function valid_message($msg) {
   return true;
 }
 
-function valid_guest_token() {
-  $token = $_COOKIE['guest_token'] ?? null;
+function valid_access_token() {
+  $token = $_COOKIE['access_token'] ?? null;
   if(
     is_null($token)
     || !valid_byte_length($token, 64, 64)

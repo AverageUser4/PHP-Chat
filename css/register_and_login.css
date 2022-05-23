@@ -25,6 +25,9 @@ h1 {
   user-select: none;
   display: block;
 }
+#formContainer form label span {
+  color: #bd3115;
+}
 #formContainer form input, #formContainer form select {
   font-size: 1.4rem;
   margin: 5px 0 10px;
@@ -38,6 +41,9 @@ h1 {
 #formContainer form p {
   text-align: center;
   font-size: 1.2rem;
+}
+#formContainer form p:first-of-type {
+  margin-bottom: 5px;
 }
 #formContainer form p a {
   text-decoration: underline;
@@ -60,4 +66,4 @@ h1 {
   }
 }
 
-/*# sourceMappingURL=register.css.map */
+/*# sourceMappingURL=register_and_login.css.map */

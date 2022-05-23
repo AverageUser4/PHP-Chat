@@ -12,11 +12,11 @@ $password = $_POST['password'];
 $gender = sanitize_gender($_POST['gender']);
 
 if(!valid_email($email))
-  failure('Walidacja adresu e-mail nie powiodła się.');
+  failure('eWalidacja adresu e-mail nie powiodła się.');
 if(!valid_username($username))
-  failure('Walidacja loginu nie powiodła się.');
+  failure('uWalidacja loginu nie powiodła się.');
 if(!valid_password($password))
-  failure('Walidacja hasła nie powiodła się. (min. 5, max. 256 znaków)');
+  failure('pWalidacja hasła nie powiodła się. (min. 5, max. 256 znaków)');
 
 $ip = 'null';
 if(

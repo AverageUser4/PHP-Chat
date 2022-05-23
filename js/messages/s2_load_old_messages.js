@@ -40,7 +40,7 @@ function scrolledToTop() {
     return;
 
   if(!no_more_old_messages && old_messages_array.length === 0)
-    sendRequest(readIncomingOldMessages, 'php/messages/load_old_messages.php', `oldest=${oldest_message_id}`);
+    sendRequest(readIncomingOldMessages, '../php/messages/load_old_messages.php', `oldest=${oldest_message_id}`);
   else
     updateOldMessage();
 }

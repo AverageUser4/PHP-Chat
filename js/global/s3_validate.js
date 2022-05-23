@@ -38,12 +38,10 @@ function validByteLength(subject, min = 0, max = 2048) {
 }
 
 function validEmail(subject) {
-  if(
-      !subject.includes('@')
-      || !subject.includes('.')
-      || subject.search(/[^A-Za-z0-9!#$%&'*+-/=?^_`{|}~.@" (),:;<>[]]/) !== -1
-    )
-    return false;
+  if(!subject.includes('@') ||!subject.includes('.'))
+    return [false, 'E-mail musi zawierać "@" i ".".'];
+  if(subject.search(/[^A-Za-z0-9!#$%&'*+-/=?^_`{|}~.@" (),:;<>[]]/) !== -1)
+    return [false, 'E-mail zawiera niedozwolone znaki.'];
 
   const at_pos = subject.lastIndexOf('@');
   const local_part = subject.slice(0, at_pos);
@@ -53,22 +51,25 @@ function validEmail(subject) {
       !validByteLength(local_part, 1, 64)
       || !validByteLength(domain_part, 4, 189)
     )
-    return false;
+    return [false, 'E-mail musi zawierać od 6 do 254 znaków'];
     
-  return true;
+  return [true, 1];
 }
 
 function validLogin(subject) {
-  if(
-      !validByteLength(subject, 3, 32)
-      || !validChars(subject)
-    )
-    return false;
-  return true;
+  if(!validByteLength(subject, 3, 32))
+    return [false, 'Login musi zawierać od 3 do 32 znaków.'];
+  if(!validChars(subject) || subject.includes('@'))
+    return [false, 'Login zawiera niedozwolone znaki.'];
+  if(subject.startsWith('Gość'))
+    return [false, 'Login nie może zaczynać się od słowa "Gość".'];    
+  return [true, 1];
 }
 
-function validPassword(subject) {
+function validPassword(subject, subject2) {
   if(!validByteLength(subject, 5, 72))
-    return false;
-  return true;
+    return [false, 'Hasło musi zawierać od 5 do 72 znaków.'];
+  if(subject !== subject2)
+    return [false, 'Hasła nie są identyczne.'];
+  return [true, 1];
 }

@@ -152,7 +152,7 @@ function sendMessage() {
     return;
   }
   
-  sendRequest(sendMessageUpdate, 'php/messages/send_message.php',
+  sendRequest(sendMessageUpdate, '../php/messages/send_message.php',
   `user=${guest_name_encoded}&guest_id=${guest_id}&guest_token=${guest_token}&message=${encodeURIComponent(msg)}`);
 }
 
