@@ -24,16 +24,24 @@ require_once 'global/pdo_connect.php';
 if(!$PDO instanceof PDO)
   failure($PDO);
 
-$PDO_stm = $PDO -> prepare("SELECT id, password FROM users
-WHERE $email_or_username = :em_or_us_val");
+$PDO_stm = $PDO -> prepare("SELECT id, username, account_type, gender,
+color, password FROM users WHERE $email_or_username = :em_or_us_val");
 $PDO_stm -> bindParam(':em_or_us_val', $em_or_us_val);
 $PDO_stm -> execute();
 $result = $PDO_stm -> fetch(PDO::FETCH_ASSOC);
 
-if(!$result || !password_verify($password, $result['password']))
+if(
+    !$result
+    || $result['account_type'] === 'guest'
+    || !password_verify($password, $result['password'])
+  )
   failure("xNiepoprawne dane logowania.");
 
 session_start();
 $_SESSION['id'] = $result['id'];
+$_SESSION['username'] = $result['username'];
+$_SESSION['account_type'] = $result['account_type'];
+$_SESSION['gender'] = $result['gender'];
+$_SESSION['color'] = $result['color'];
 
 echo '1';

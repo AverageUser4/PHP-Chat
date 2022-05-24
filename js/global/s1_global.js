@@ -30,3 +30,7 @@ for(let x of buttons)
   x.addEventListener('click', blurButton);
 
 function blurButton(event) { event.currentTarget.blur(); }
+
+/* get user info */
+const user = JSON.parse(document.getElementById('user_data').innerHTML);
+user.username_encoded = encodeURIComponent(user.username);

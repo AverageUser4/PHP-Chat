@@ -2,6 +2,12 @@
 header("Content-Type: text/event-stream");
 header('Cache-Control: no-cache');
 
+session_start();
+if(!isset($_SESSION['id'])) {
+  header('Location: ../../index.php');
+  exit();
+}
+
 set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat/php');
 set_time_limit(3600);
 require_once 'global/validate.php';
@@ -42,11 +48,10 @@ register_shutdown_function('sse_shutdownHandler');
 //////////////////////////////////////////////
 //////////////////////////////////////////////
 
-if(!get_exists(['latest', 'user']) || !valid_int($_GET['latest']))
+if(!isset($_GET['latest']) || !filter_var($_GET['latest'], FILTER_VALIDATE_INT))
   sse_failure('wrong_data');
 
 $latest_id = $_GET['latest'];
-$user = $_GET['user'];
 $custom_error = null;
 
 
@@ -54,29 +59,36 @@ require_once "global/pdo_connect.php";
 if(!$PDO instanceof PDO)
   sse_failure('db_connect_fail');
 
-$PDO_Statement = $PDO -> prepare("SELECT * FROM messages WHERE
-  id > :id AND NOT nickname = :user");
-$PDO_Statement -> bindParam(':user', $user, PDO::PARAM_STR);
+$query_string = 
+"SELECT m.message_id, m.content, m.date, u.username
+FROM messages AS m, users AS u 
+WHERE m.user_id = u.id 
+AND m.message_id > :latest_id
+AND NOT m.user_id = :user_id";
+
+//$query_string = "SELECT * FROM messages WHERE id > :id AND NOT nickname = :user";
+$PDO_stm = $PDO -> prepare($query_string);
+$PDO_stm -> bindParam(':user_id', $_SESSION['id'], PDO::PARAM_STR);
 
 while (1) {
   /* check database every 3 seconds, if there are messages
   that were sent by someone else than the user, send them to user */
   if(connection_aborted()) break;
 
-  $PDO_Statement -> bindParam(':id', $latest_id, PDO::PARAM_INT);
-  $PDO_Statement -> execute();
+  $PDO_stm -> bindParam(':latest_id', $latest_id, PDO::PARAM_INT);
+  $PDO_stm -> execute();
 
-  $result = $PDO_Statement -> fetchAll(PDO::FETCH_NUM);
+  $result = $PDO_stm -> fetchAll(PDO::FETCH_ASSOC);
   $len = count($result);
 
   if($len) {
-    $latest_id = $result[$len - 1][0];
+    $latest_id = $result[$len - 1]['message_id'];
     $message = '';
 
     for($i = 0; $i < $len; $i++) {
-      $message .= $result[$i][1] . '%';
-      $message .= $result[$i][2] . '%';
-      $message .= $result[$i][3];
+      $message .= $result[$i]['username'] . '%';
+      $message .= $result[$i]['content'] . '%';
+      $message .= $result[$i]['date'];
       if($i != $len - 1)
         $message .= '%';
     }

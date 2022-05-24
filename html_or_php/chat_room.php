@@ -1,9 +1,9 @@
 <?php
-// session_start();
-// if(!isset($_SESSION['id'])) {
-//   header('Location: ../index.php');
-//   exit();
-// }
+session_start();
+if(!isset($_SESSION['id'])) {
+  header('Location: ../index.php');
+  exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -102,27 +102,34 @@
 
     set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat/php');
 
-    $messages = require_once 'messages/load_old_messages.php';
-    echo "<template id='old_mes_data'>$messages</template>";
+    require_once 'messages/load_messages_initial.php';
+    echo "<template id='old_mes_data'>$messages_string</template>";
 
-    require_once 'accounts/verify_guest.php';
-
-    echo "<template id='guest_data'>$result[0]%$result[1]</template>";
+    echo
+    '
+    <template id="user_data">
+      {
+        "id":'.$_SESSION["id"].',
+        "username":"'.$_SESSION["username"].'",
+        "account_type":"'.$_SESSION["account_type"].'",
+        "gender":"'.$_SESSION["gender"].'",
+        "color":"'.$_SESSION["color"].'"
+      }
+    </template>
+    ';
 
   ?>
 
-
   <script defer src="../js/global/s1_global.js"></script>
-  <script defer src="../js/global/s2_cookies.js"></script>
   <script defer src="../js/global/s3_validate.js"></script>
-
+  
   <script defer src="../js/messages/s1_messages_global.js"></script>
   <script defer src="../js/messages/s2_load_old_messages.js"></script>
   <script defer src="../js/messages/s3_send_message.js"></script>
   <script defer src="../js/messages/s4_load_new_messages.js"></script>
-
+  
   <script defer src="../js/pp_color/s1_color_global.js"></script>
-
+  
   <script defer src="../js/run_when_loaded.js"></script>
 
 </body>

@@ -18,7 +18,7 @@ function isVarDefined() {
   clearInterval(myInterval);
 
   event_source = new EventSource
-  (`../php/messages/load_new_messages.php?latest=${latest_message_id}&user=${guest_name_encoded}`);
+  (`../php/messages/load_new_messages.php?latest=${latest_message_id}&user=${user.username_encoded}`);
   event_source.addEventListener('new_msg', appendNewMessages);
   event_source.addEventListener('custom_error', handleCustomError);
   event_source.addEventListener('open', () => connection_open = true);

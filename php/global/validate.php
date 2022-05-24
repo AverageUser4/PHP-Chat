@@ -1,16 +1,10 @@
 <?php
 
-set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat/php');
+$location = $_SERVER['DOCUMENT_ROOT'] . '/chat/html_or_php/something_went_wrong.php';
 $safe_chars_regex = "/[\p{C}\p{Z}\u{034f}\u{115f}\u{1160}\u{17b4}\u{17b5}\u{180e}\u{2800}\u{3164}\u{ffa0}]/u";
 
 function failure($e) { echo 'error%' . $e; exit(); }
 function failure_return($e) { return 'error%' . $e; }
-function something_went_wrong($info) {
-  session_start();
-  $_SESSION['sww_err'] = $info;
-  header('Location: ../html_or_php/something_went_wrong.php');
-  exit();
-}
 
 function get_exists(array $arr) {
   foreach($arr as $x) {

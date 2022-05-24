@@ -152,8 +152,7 @@ function sendMessage() {
     return;
   }
   
-  sendRequest(sendMessageUpdate, '../php/messages/send_message.php',
-  `user=${guest_name_encoded}&guest_id=${guest_id}&guest_token=${guest_token}&message=${encodeURIComponent(msg)}`);
+  sendRequest(sendMessageUpdate, '../php/messages/send_message.php', `message=${encodeURIComponent(msg)}`);
 }
 
 function sendMessageUpdate() {
@@ -164,7 +163,7 @@ function sendMessageUpdate() {
     return;
   }
 
-  createMessageElement(guest_name, new Date().toLocaleString(),
+  createMessageElement(user.username, new Date().toLocaleString(),
   msg.replace(/&/g, '&amp;').replace(/</g, '&lt;'), true);
   output_container.scrollTo(0, 999999);
 }

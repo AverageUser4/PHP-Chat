@@ -3,7 +3,7 @@
 let old_messages_array = [];
 let no_more_old_messages = false;
 
-/* ask for 50 latest messages from database when document is loaded */
+/* read 50 latest messages from template tag when document is loaded */
 
 function getMessagesWhenLoaded() {
   // insert messages we asked for into the output field

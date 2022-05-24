@@ -4,10 +4,10 @@ set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat/php');
 
 function insert_new_user
 (
-  $ip = 'null',
-  $email = 'null',
-  $username = 'null',
-  $password = 'null',
+  $ip = 'undef',
+  $email = 'undef',
+  $username = 'undef',
+  $password = 'undef',
   $gender = 'other',
   $account_type = 'guest'
 ) {
@@ -38,10 +38,10 @@ function insert_new_user
   
   if($account_type === 'guest') {
     $access_token = bin2hex(random_bytes(32));
-    $hash = 'null';
+    $hash = 'undef';
   }
   else { 
-    $access_token = 'null';
+    $access_token = 'undef';
     $hash = password_hash($password, PASSWORD_DEFAULT);
   }
 
@@ -49,7 +49,7 @@ function insert_new_user
   prepare(
   "INSERT INTO users VALUES 
     (
-    null,
+    NULL,
     :email,
     :username,
     '$hash',
@@ -65,24 +65,36 @@ function insert_new_user
   $PDO_stm -> bindParam(':email', $email);
   $PDO_stm -> bindParam(':username', $username);
   $PDO_stm -> bindParam(':ip', $ip);
+
+  if($account_type !== 'guest') {
+    if(!$PDO_stm -> execute())
+      return [false, 'Nie udało się dodać użytkownika do bazy danych.'];
+
+    setcookie('access_token', $access_token, time() + 60*60*24*365, '/');
+    return [true, true];
+  }
+
+  // new guest only
+  $PDO -> beginTransaction();
   if(!$PDO_stm -> execute())
     return [false, 'Nie udało się dodać użytkownika do bazy danych.'];
 
-  if($account_type !== 'guest')
-    return [true, true];
-
   $PDO_stm = $PDO -> query("SELECT id FROM users WHERE access_token = '$access_token'");
   $result = $PDO_stm -> fetch(PDO::FETCH_NUM);
-  if(!$result[0])
-    return [true, 'Dodano użytkownika, ale nie udało się zmienić nazwy.'];
+  if(!$result[0]) {
+    $PDO -> rollBack();
+    return [false, 'Dodano użytkownika, ale nie udało się zmienić nazwy.'];
+  }
 
   $PDO_stm = $PDO -> query("UPDATE users SET username = 'Gość $result[0]' WHERE access_token = '$access_token'");
-  if(!$PDO_stm -> rowCount())
-    return [true, 'Dodano użytkownika, ale nie udało się zmienić nazwy.(2)'];
+  if(!$PDO_stm -> rowCount()) {
+    $PDO -> rollBack();
+    return [false, 'Dodano użytkownika, ale nie udało się zmienić nazwy.(2)'];
+  }
 
+  $PDO -> commit();
+  setcookie('access_token', $access_token, time() + 60*60*24*365, '/');
   return [true, $result[0]];
-
-  // może warto skorzystać z transakcji, żeby upewnić się, że nazwa zostanie zmieniona
 }
 
 
