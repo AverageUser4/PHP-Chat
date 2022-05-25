@@ -4,6 +4,7 @@
 //   header('Location: chat_room.php');
 //   exit();
 // }
+// session_commit();
 ?>
 
 <!DOCTYPE html>
@@ -61,7 +62,7 @@
   <script defer src="../js/global/s3_validate.js"></script>
   
   <script defer src="../js/accounts/s1_register_only.js"></script>
-  <script defer src="../js/accounts/s2_accounts_global.js"></script>
+  <script defer src="../js/accounts/s2_register_and_login.js"></script>
 
 </body>
 

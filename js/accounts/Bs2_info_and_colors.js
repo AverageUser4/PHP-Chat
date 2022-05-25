@@ -15,7 +15,7 @@ const apply = document.getElementById('applyButton');
 apply.addEventListener('click', requestColorUpdate);
 let current_color = 'cool value';
 
-const all_users_color_data = new Map();
+const all_users_data = new Map();
 const style_container = document.getElementById('usersPicturesColors');
 
 const r_slider = document.getElementById('r');
@@ -34,6 +34,8 @@ const a_val = document.getElementById('aVal');
 
 let new_color;
 
+
+/* color picker */
 updateColorField({currentTarget: random_color_button});
 
 function openColorPicker(e) {
@@ -77,21 +79,25 @@ function requestColorUpdate() {
     return;
   current_color = new_color;
 
-  sendRequest(updateProfilePicture, '../php/accounts/profile_customize.php',
+  sendRequest(updateProfilePictureColor, '../php/accounts/profile_customize.php',
   `color=${new_color}`);
 }
 
-function updateProfilePicture() {
+function updateProfilePictureColor() {
   if(this.responseText.startsWith('error%')) {
     alert(this.responseText.slice(6));
     return;
   }
-  createColorClass(guest_name);
-  updateClassColor(guest_name, new_color);
+  if(!getInfoAndCreateColorClass(user.username))
+    updateInfoAndClassColor(user.username, `{"color":"${current_color}"}`);
+
+  closeColorPicker();
 }
 
-function createColorClass(name) {
-  if(all_users_color_data.has(name))
+
+/* class for every user that we read message from */
+function getInfoAndCreateColorClass(name) {
+  if(all_users_data.has(name))
     return false;
   
   let class_name = 'u';
@@ -102,25 +108,34 @@ function createColorClass(name) {
   style_container.innerHTML += 
   `.${class_name}{background:rgba(0,0,0,0);}`;
 
-  all_users_color_data.set(name, class_name);
+  all_users_data.set(name, { class_name: class_name });
   sendRequest
   (
-    function () { updateClassColor(name, this.responseText) },
-    '../php/accounts/get_user_color.php',
+    function () { updateInfoAndClassColor(name, this.responseText) },
+    '../php/accounts/get_user_info.php',
     `username=${encodeURIComponent(name)}`
   );
 
   return class_name;
 }
 
-function updateClassColor(name, response) {
-  let color = response;
+function updateInfoAndClassColor(name, response) {
+  let color;
   if(response.startsWith('error%')) {
     console.log(response.slice(6));
     color = '0,0,0,0';
   }
+  else {
+    const json_obj = JSON.parse(response);
+    color = json_obj.color;
+    if(json_obj.hasOwnProperty('gender'))
+      all_users_data.get(name).gender = json_obj.gender;
+    if(json_obj.hasOwnProperty('account_type'))
+      all_users_data.get(name).account_type = json_obj.account_type;
+    all_users_data.get(name).color = json_obj.color;
+  }
 
-  const class_name = all_users_color_data.get(name);
+  const class_name = all_users_data.get(name).class_name;
   const s = style_container.innerHTML;
   const class_pos = s.indexOf(class_name);
   const semicolon_pos = s.indexOf('}', class_pos);

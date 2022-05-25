@@ -1,5 +1,6 @@
 <?php
 
+set_time_limit(1);
 set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat/php');
 
 if(!isset($_SERVER['REMOTE_ADDR']) 
@@ -10,10 +11,10 @@ else $ip = $_SERVER['REMOTE_ADDR'];
 require_once 'accounts/reusable.php';
 $success = insert_new_user($ip);
 
-session_start();
-
 if(!$success[0]) {
+  session_start();
   $_SESSION['sww_err'] = $success[1];
+  session_commit();
   header("Location: ../../html_or_php/something_went_wrong.php");
   exit();
 }

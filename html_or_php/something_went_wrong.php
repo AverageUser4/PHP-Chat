@@ -13,6 +13,7 @@
     session_start();
     if(isset($_SESSION['sww_err']))
       echo '<br>', $_SESSION['sww_err'];
+    session_commit();
   ?>
 
 </body>

@@ -1,9 +1,16 @@
 <?php
+set_time_limit(5);
 session_start();
 if(!isset($_SESSION['id'])) {
   header('Location: ../index.php');
   exit();
 }
+$id = $_SESSION['id'];
+$username = $_SESSION['username'];
+$account_type = $_SESSION['account_type'];
+$gender = $_SESSION['gender'];
+$color = $_SESSION['color'];
+session_commit();
 ?>
 
 <!DOCTYPE html>
@@ -48,8 +55,12 @@ if(!isset($_SESSION['id'])) {
         </div>
 
         <div id="loginOrRegisterContainer" class="genericContainer">
+          <?php if($account_type === 'guest'): ?>
           <div><a href="register.php">Zarejestruj się</a></div>
           <div><a href="login.php">Zaloguj się</a></div>
+          <?php else: ?>
+          <div><a href="../php/accounts/logout.php">Wyloguj się</a></div>
+          <?php endif; ?>
         </div>
 
       </div>
@@ -57,7 +68,7 @@ if(!isset($_SESSION['id'])) {
       <div id="colorPickerContainer">
 
         <div id="colorContainer">
-          <img src="../resources/pp_male.jpg">
+          <img src="../resources/<?=$gender?>.jpg">
           <div id="color"></div>
         </div>
 
@@ -102,18 +113,18 @@ if(!isset($_SESSION['id'])) {
 
     set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat/php');
 
-    require_once 'messages/load_messages_initial.php';
+    require_once 'messages/load_old_messages.php';
     echo "<template id='old_mes_data'>$messages_string</template>";
-
+    
     echo
     '
     <template id="user_data">
       {
-        "id":'.$_SESSION["id"].',
-        "username":"'.$_SESSION["username"].'",
-        "account_type":"'.$_SESSION["account_type"].'",
-        "gender":"'.$_SESSION["gender"].'",
-        "color":"'.$_SESSION["color"].'"
+        "id":'.$id.',
+        "username":"'.$username.'",
+        "account_type":"'.$account_type.'",
+        "gender":"'.$gender.'",
+        "color":"'.$color.'"
       }
     </template>
     ';
@@ -122,16 +133,17 @@ if(!isset($_SESSION['id'])) {
 
   <script defer src="../js/global/s1_global.js"></script>
   <script defer src="../js/global/s3_validate.js"></script>
-  
+
+  <script defer src="../js/accounts/Bs1_chat_room_global.js"></script>
+  <script defer src="../js/accounts/Bs2_info_and_colors.js"></script>
+
   <script defer src="../js/messages/s1_messages_global.js"></script>
   <script defer src="../js/messages/s2_load_old_messages.js"></script>
   <script defer src="../js/messages/s3_send_message.js"></script>
   <script defer src="../js/messages/s4_load_new_messages.js"></script>
   
-  <script defer src="../js/pp_color/s1_color_global.js"></script>
-  
   <script defer src="../js/run_when_loaded.js"></script>
-
+  
 </body>
 
 </html>

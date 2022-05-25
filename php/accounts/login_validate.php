@@ -1,5 +1,6 @@
 <?php
 
+set_time_limit(1);
 set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat/php');
 require_once 'global/validate.php';
 
@@ -37,11 +38,13 @@ if(
   )
   failure("xNiepoprawne dane logowania.");
 
+
 session_start();
 $_SESSION['id'] = $result['id'];
 $_SESSION['username'] = $result['username'];
 $_SESSION['account_type'] = $result['account_type'];
 $_SESSION['gender'] = $result['gender'];
 $_SESSION['color'] = $result['color'];
+session_commit();
 
 echo '1';

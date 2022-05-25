@@ -52,7 +52,10 @@ function validateForm(event) {
   if(!test[0]) { showError('pass', test[1]); return; }
 
   test = validLogin(login.value);
-  if(!test[0]) { showError('login', test[1]); return; } 
+  if(!test[0]) { 
+    test = validEmail(login.value);
+    if(register_extended || !test[0]) { showError('login', test[1]); return; }
+  } 
 
 
   let path;

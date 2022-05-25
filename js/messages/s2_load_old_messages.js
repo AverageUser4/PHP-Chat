@@ -5,6 +5,7 @@ let no_more_old_messages = false;
 
 /* read 50 latest messages from template tag when document is loaded */
 
+
 function getMessagesWhenLoaded() {
   // insert messages we asked for into the output field
 
@@ -28,7 +29,6 @@ function getMessagesWhenLoaded() {
 
   output_container.scrollTo(0, 999999);
 }
-
 
 /* ask for older messages, if user has scrolled to top */
 

@@ -1,5 +1,6 @@
 <?php
 
+set_time_limit(1);
 set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat/php');
 require_once 'global/validate.php';
 
@@ -58,5 +59,8 @@ for($i = 0; $i < $len; $i++) {
   $messages_string .= $result[$i]['date'];
   $i != $len - 1 ? $messages_string .= '%' : 0;
 }
+
+if($first_page_load)
+  return;
 
 echo $messages_string;

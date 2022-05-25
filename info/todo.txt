@@ -6,6 +6,8 @@
 - admin accounts
 - different channels
 - check if sse ends script correctly
+- make profile pciture appropriate to gender
+- you cannot login with email
 
 !!!!!!
 new users names are getting saved in database without changing unsafe
@@ -13,6 +15,4 @@ characters to html entities
 !!!!!!!
 
 - po pobraniu document root z serwera wszystkie ścieżki mogą się zaczynać w tym samym miejscu
-- obecnie każdy może się zalogować na każde konto gościa
 - zabronić często używanych znaków specjalnych w nicku takich jak #$%^&*() itd
-- przechowywanie gości w innej tabeli niż użytowników chyba ma więcej sensu

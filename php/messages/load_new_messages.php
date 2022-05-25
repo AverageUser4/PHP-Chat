@@ -1,4 +1,4 @@
-<?php 
+<?php
 header("Content-Type: text/event-stream");
 header('Cache-Control: no-cache');
 
@@ -7,6 +7,8 @@ if(!isset($_SESSION['id'])) {
   header('Location: ../../index.php');
   exit();
 }
+$id = $_SESSION['id'];
+session_commit();
 
 set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat/php');
 set_time_limit(3600);
@@ -68,7 +70,7 @@ AND NOT m.user_id = :user_id";
 
 //$query_string = "SELECT * FROM messages WHERE id > :id AND NOT nickname = :user";
 $PDO_stm = $PDO -> prepare($query_string);
-$PDO_stm -> bindParam(':user_id', $_SESSION['id'], PDO::PARAM_STR);
+$PDO_stm -> bindParam(':user_id', $id, PDO::PARAM_STR);
 
 while (1) {
   /* check database every 3 seconds, if there are messages

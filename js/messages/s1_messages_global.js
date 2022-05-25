@@ -28,16 +28,20 @@ function parseMessageDate(initial_date) {
 /* create element containing single message */
 function createMessageElement(name, date, message, append) {
 
-  let class_name = createColorClass(name)
+  let class_name = getInfoAndCreateColorClass(name)
   if(!class_name)
-    class_name = all_users_color_data.get(name);
+    class_name = all_users_data.get(name).class_name;
+
+  let gender = 'other';
+  if(all_users_data.get(name).hasOwnProperty('gender'))
+    gender = all_users_data.get(name).gender;
 
   const div = document.createElement('DIV');
 
   div.innerHTML =
   `
   <div class="imgContainer">
-    <img draggable="false" src="../resources/pp_male.jpg">
+    <img draggable="false" src="../resources/${gender}.jpg">
     <div class="imgColor ${class_name}"></div>
   </div>
   <div>

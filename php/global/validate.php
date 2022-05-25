@@ -67,6 +67,17 @@ function valid_username($user) {
   return true;
 }
 
+function valid_guestname($guest) {
+  if(
+    !valid_byte_length($guest, 3, 32)
+    || !valid_chars($guest)
+    || !str_starts_with($guest, 'Gość ')
+    || !filter_var(mb_substr($guest, 5), FILTER_VALIDATE_INT)
+    )
+    return false;
+  return true;
+}
+
 function valid_password($password) {
   if(!valid_byte_length($password, 5, 256))
     return false;

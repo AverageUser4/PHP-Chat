@@ -8,6 +8,7 @@
 //   header('Location: ../index.php');
 //   exit();
 // }
+// session_commit();
 ?>
 
 <!DOCTYPE html>
