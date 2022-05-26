@@ -16,3 +16,5 @@ characters to html entities
 
 - po pobraniu document root z serwera wszystkie ścieżki mogą się zaczynać w tym samym miejscu
 - zabronić często używanych znaków specjalnych w nicku takich jak #$%^&*() itd
+- genialny skrypt logowania nie będzie chciał wysłać więcej razy tego samego loginu, nawet jeśli tylko samo hasło jest błędne
+- kolory czasem działają czasem nie

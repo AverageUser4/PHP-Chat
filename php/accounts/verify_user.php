@@ -4,8 +4,9 @@ set_time_limit(1);
 set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat/php');
 require_once 'global/validate.php';
 
+//first time on page
 if(!isset($_COOKIE['access_token'])) {
-  header('Location: ../../html_or_php/register.php');
+  header('Location: ../../html_or_php/are_you_new.php');
   exit();
 }
 
@@ -35,5 +36,10 @@ if(valid_access_token()) {
     exit();
   }
 }
+else if($_COOKIE['access_token'] === 'undef') {
+  header('Location: ../../html_or_php/login.php');
+  exit();
+}
 
+setcookie('access_token', '', time() - 3600, '/');
 header('Location: ../../html_or_php/register.php');

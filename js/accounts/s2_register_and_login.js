@@ -12,6 +12,9 @@ let register_extended = false;
 if(typeof email !== 'undefined')
   register_extended = true;
 
+const dont_logout = document.getElementById('dont_logout');
+
+
 function validateForm(event) {
   event.preventDefault();
 
@@ -67,9 +70,11 @@ function validateForm(event) {
     form_data.append('gender', gender.value);
     path = '../php/accounts/register_validate.php';
   }
-  else
+  else {
+    if(dont_logout.checked)
+      form_data.append('dont_logout', 'true');
     path = '../php/accounts/login_validate.php';
-
+  }
   sendRequest(registerRequestResult, path, form_data, 'POST');
 }
 
@@ -108,10 +113,14 @@ function registerRequestResult() {
       alert(response);
     return;
   }
-  if(register_extended)
-    overwriteDocument();
+  else if(response === '1') {
+    if(register_extended)
+      overwriteDocument();
+    else
+      location.assign('chat_room.php');
+  }
   else
-    location.assign('chat_room.php');
+    alert(response);
 }
 
 function showError(where, errmsg) {

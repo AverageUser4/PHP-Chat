@@ -31,16 +31,16 @@
     <form novalidate id="registerForm" method="post">
 
       <label id="emailLabel" for="email">Adres e-mail: <span></span></label>
-      <input id="email" type="email" name="email">
+      <input value="adam@gmail.com" id="email" type="email" name="email">
 
       <label id="loginLabel" for="login">Login: <span></span></label>
-      <input id="login" type="text" name="username">
+      <input value="adam" id="login" type="text" name="username">
 
       <label id="passLabel" for="pass">Hasło: <span></span></label>
-      <input id="pass" type="password" name="password">
+      <input value="qwerty" id="pass" type="password" name="password">
 
       <label for="pass2">Powtórz hasło:</label>
-      <input id="pass2" type="password" name="password2">
+      <input value="qwerty" id="pass2" type="password" name="password2">
 
       <label for="gender">Wybierz płeć:</label>
       <select id="gender" name="gender">
@@ -51,8 +51,11 @@
       
       <input type="submit" value="Zarejestruj się">
       
-      <p>Masz już konto? <a href="login.php">Zaloguj się.</a></p>
       <p>Rejestrując się akceptujesz <a href="regulamin.txt">regulamin.</a></p>
+      <p>
+        <a href="login.php">Zaloguj się</a> lub
+        <a href="../php/accounts/create_guest.php">kontynuuj jako gość.</a>
+      </p>
       
     </form>
 

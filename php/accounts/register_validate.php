@@ -28,9 +28,23 @@ $ip = $_SERVER['REMOTE_ADDR'];
 
 
 require_once 'accounts/reusable.php';
-$success = insert_new_user($ip, $email, $username, $password, $gender, 'user');
+session_start();
+$user_id = $_SESSION['id'] ?? null;
+session_commit();
 
-if(!$success[0])
-  failure($success[1]);
+if(!$user_id) {
+  $success = insert_new_user($ip, $email, $username, $password, $gender, 'user');
+  if(!$success[0])
+    failure($success[1]);
+}
+else {
+  $success = change_guest_to_user($email, $username, $password, $gender, $user_id);
+  if(!$success[0]) {
+    $success = insert_new_user($ip, $email, $username, $password, $gender, 'user');
+  if(!$success[0])
+    failure($success[1]);
+  }
+}
+
 
 echo '1';

@@ -18,7 +18,7 @@ h1 {
   form {
     width: 60%;
     margin: auto;
-    label {
+    label:not(#dl) {
       font-size: 1.2rem;
       user-select: none;
       display: block;
@@ -26,7 +26,11 @@ h1 {
         color: #bd3115;
       }
     }
-    input, select {
+    #dl {
+      display: block;
+      text-align: right;
+    }
+    input:not(input[type=checkbox]), select {
       font-size: 1.4rem;
       margin: 5px 0 10px;
       width: 100%;

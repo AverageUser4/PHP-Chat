@@ -3,6 +3,63 @@
 set_time_limit(1);
 set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat/php');
 
+require_once 'global/pdo_connect.php';
+
+function check_email_and_username_taken($email, $username) {
+  global $PDO;
+  if(!$PDO instanceof PDO)
+    return [false, $PDO];
+
+  $PDO_stm = $PDO -> prepare("SELECT id FROM users WHERE email = :email");
+  $PDO_stm -> bindParam(':email', $email);
+  $PDO_stm -> execute();
+  $result = $PDO_stm -> fetch(PDO::FETCH_NUM);
+  if($result)
+    return [false, 'eE-mail zajęty.'];
+
+  $PDO_stm = $PDO -> prepare("SELECT id FROM users WHERE username = :username");
+  $PDO_stm -> bindParam(':username', $username);
+  $PDO_stm -> execute();
+  $result = $PDO_stm -> fetch(PDO::FETCH_NUM);
+  if($result)
+    return [false, 'uLogin zajęty.'];
+
+  return [true, 1];
+}
+
+function change_guest_to_user($email, $username, $password, $gender, $id) {
+  global $PDO;
+  if(!$PDO instanceof PDO)
+    return [false, $PDO];
+
+  $test = check_email_and_username_taken($email, $username);
+  if(!$test[0])
+    return [false, $test[1]];
+    
+  $hash = password_hash($password, PASSWORD_DEFAULT);
+
+  $query_string = "UPDATE users SET 
+  email = :email, username = :username,
+  password = '$hash', gender = :gender,
+  account_type = 'user'
+  WHERE id = $id";
+
+  $PDO_stm = $PDO -> prepare($query_string);
+  $PDO_stm -> bindParam(':email', $email);
+  $PDO_stm -> bindParam(':username', $username);
+  $PDO_stm -> bindParam(':gender', $gender);
+  if(!$PDO_stm -> execute() || !$PDO_stm -> rowCount())
+    return [false, 'Nie udało się zmienić gościa na użytkownika.'];
+
+  session_start();
+  $_SESSION['username'] = $username;
+  $_SESSION['gender'] = $gender;
+  $_SESSION['account_type'] = 'user';
+  session_commit();
+
+  return [true, true];
+}
+
 function insert_new_user
 (
   $ip = 'undef',
@@ -12,24 +69,11 @@ function insert_new_user
   $gender = 'other',
   $account_type = 'guest'
 ) {
-  require_once 'global/pdo_connect.php';
-  if(!$PDO instanceof PDO)
-    return [false, $PDO];
 
   if($account_type !== 'guest') {
-    $PDO_stm = $PDO -> prepare("SELECT id FROM users WHERE email = :email");
-    $PDO_stm -> bindParam(':email', $email);
-    $PDO_stm -> execute();
-    $result = $PDO_stm -> fetch(PDO::FETCH_NUM);
-    if($result)
-      return [false, 'eE-mail zajęty.'];
-  
-    $PDO_stm = $PDO -> prepare("SELECT id FROM users WHERE username = :username");
-    $PDO_stm -> bindParam(':username', $username);
-    $PDO_stm -> execute();
-    $result = $PDO_stm -> fetch(PDO::FETCH_NUM);
-    if($result)
-      return [false, 'uLogin zajęty.'];
+    $test = check_email_and_username_taken($email, $username);
+    if(!$test[0])
+      return[false, $test[1]];
   }
 
   $r = random_int(0, 255);
@@ -45,6 +89,10 @@ function insert_new_user
     $access_token = 'undef';
     $hash = password_hash($password, PASSWORD_DEFAULT);
   }
+
+  global $PDO;
+  if(!$PDO instanceof PDO)
+    return [false, $PDO];
 
   $PDO_stm = $PDO -> 
   prepare(

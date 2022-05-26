@@ -94,7 +94,7 @@ session_commit();
         </div>
 
         <div id="randomColorButton">Losuj</div>
-        <div id="applyButton">Zmień</div>
+        <div id="applyButton">Zapisz</div>
 
         <button id="colorCloseButton">X</button>
 

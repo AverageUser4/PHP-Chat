@@ -30,16 +30,23 @@
 
     <form novalidate id="registerForm" method="post">
       
-      <label id="loginLabel" for="login">Login: <span></span></label>
-      <input id="login" type="text" name="username">
+      <label id="loginLabel" for="login">Login / e-mail: <span></span></label>
+      <input value="adam" id="login" type="text" name="username">
 
       <label id="passLabel" for="pass">Hasło: <span></span></label>
-      <input id="pass" type="password" name="password">
+      <input value="qwerty" id="pass" type="password" name="password">
+      
+      <label id="dl" for="dont_logout">Nie wylogowuj mnie
+        <input checked id="dont_logout" type="checkbox" name="dont_logout" value="true">
+      </label>
       
       <input type="submit" value="Zaloguj się">
       
-      <p>Nie masz konta? <a href="register.php">Zarejestruj się.</a></p>
-      
+      <p>
+        <a href="register.php">Zarejestruj się</a> lub
+        <a href="../php/accounts/create_guest.php">kontynuuj jako gość.</a>
+      </p>
+
     </form>
 
   </div>
