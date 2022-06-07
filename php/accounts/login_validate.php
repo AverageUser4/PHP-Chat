@@ -60,4 +60,7 @@ $_SESSION['gender'] = $result['gender'];
 $_SESSION['color'] = $result['color'];
 session_commit();
 
+// require_once 'accounts/reusable.php';
+// makeUserActiveOrInactive('active');
+
 echo '1';

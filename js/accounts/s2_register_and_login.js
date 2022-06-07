@@ -97,7 +97,8 @@ function registerRequestResult() {
         || response.startsWith('u')
         || response.includes('Niepoprawne dane logowania')
       ) {
-      incorrect_logins.push(login.value);
+      if(!response.includes('Niepoprawne dane logowania'))
+        incorrect_logins.push(login.value);
       showError('login', response.slice(1));
     }
     if(response.startsWith('p')) {

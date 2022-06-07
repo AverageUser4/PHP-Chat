@@ -111,6 +111,7 @@
 
 /* contains currently active users */
 #activeUsersContainer {
+  overflow: auto;
   color: #ddd;
   border-left: none;
   height: 70%;

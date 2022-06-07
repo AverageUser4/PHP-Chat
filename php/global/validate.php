@@ -61,7 +61,7 @@ function valid_username($user) {
     !valid_byte_length($user, 3, 32)
     || !valid_chars($user)
     || str_starts_with($user, 'Gość')
-    || str_contains($user, '@')
+    || preg_match('/[!-.:-@[-`~]/', $user)
     )
     return false;
   return true;
@@ -114,10 +114,10 @@ function valid_color($color_str) {
   $arr = explode(',', $color_str);
   if(
     count($arr) !== 4
-    || !filter_var($arr[0], FILTER_VALIDATE_INT, ['min_range' => 0, 'max_range' => 255])
-    || !filter_var($arr[1], FILTER_VALIDATE_INT, ['min_range' => 0, 'max_range' => 255])
-    || !filter_var($arr[2], FILTER_VALIDATE_INT, ['min_range' => 0, 'max_range' => 255])
-    || !filter_var($arr[3], FILTER_VALIDATE_FLOAT, ['min_range' => 0, 'max_range' => 1])
+    || (!$arr[0] == 0 && !filter_var($arr[0], FILTER_VALIDATE_INT, ['min_range' => 0, 'max_range' => 255]))
+    || (!$arr[1] == 0 && !filter_var($arr[1], FILTER_VALIDATE_INT, ['min_range' => 0, 'max_range' => 255]))
+    || (!$arr[2] == 0 && !filter_var($arr[2], FILTER_VALIDATE_INT, ['min_range' => 0, 'max_range' => 255]))
+    || (!$arr[3] == 0 && !filter_var($arr[3], FILTER_VALIDATE_FLOAT, ['min_range' => 0, 'max_range' => 1]))
     )
     return false;
   return true;

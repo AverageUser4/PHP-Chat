@@ -32,6 +32,10 @@ if(valid_access_token()) {
     $_SESSION['account_type'] = $result['account_type'];
     $_SESSION['gender'] = $result['gender'];
     $_SESSION['color'] = $result['color'];
+
+    // require_once 'accounts/reusable.php';
+    // makeUserActiveOrInactive('active');
+    
     header('Location: ../../html_or_php/chat_room.php');
     exit();
   }

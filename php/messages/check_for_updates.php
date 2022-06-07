@@ -10,17 +10,27 @@ if(!isset($_SESSION['id'])) {
 $id = $_SESSION['id'];
 session_commit();
 
-set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat/php');
-set_time_limit(3600);
-require_once 'global/validate.php';
-
 function sse_failure($e) {
   global $custom_error;
   $custom_error = $e;
   exit();
 }
 
+set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat/php');
+set_time_limit(3600);
+require_once 'global/validate.php';
+require_once "global/pdo_connect.php";
+if(!$PDO instanceof PDO)
+  sse_failure('db_connect_fail');
+
 function sse_shutdownHandler() {
+  global $PDO;
+  if(!$PDO instanceof PDO)
+    return;
+
+  global $id;
+  $PDO -> query("UPDATE users SET active = 0 WHERE id = $id");
+
   if(connection_aborted())
     return;
 
@@ -57,10 +67,6 @@ $latest_id = $_GET['latest'];
 $custom_error = null;
 
 
-require_once "global/pdo_connect.php";
-if(!$PDO instanceof PDO)
-  sse_failure('db_connect_fail');
-
 $query_string = 
 "SELECT m.message_id, m.content, m.date, u.username
 FROM messages AS m, users AS u 
@@ -68,14 +74,30 @@ WHERE m.user_id = u.id
 AND m.message_id > :latest_id
 AND NOT m.user_id = :user_id";
 
-//$query_string = "SELECT * FROM messages WHERE id > :id AND NOT nickname = :user";
 $PDO_stm = $PDO -> prepare($query_string);
 $PDO_stm -> bindParam(':user_id', $id, PDO::PARAM_STR);
+
+$query_active = "SELECT username FROM users WHERE active = 1 ORDER BY username";
+$PDO_stm_active = $PDO -> prepare($query_active);
+$active_check_counter = 0;
+
+$PDO -> query("UPDATE users SET active = 1 WHERE id = $id");
 
 while (1) {
   /* check database every 3 seconds, if there are messages
   that were sent by someone else than the user, send them to user */
   if(connection_aborted()) break;
+
+  if(!$active_check_counter) {
+    $active_check_counter = 4;
+
+    $PDO_stm_active -> execute();
+    $result = $PDO_stm_active -> fetchAll(PDO::FETCH_NUM);
+    if($result) {
+      $data = json_encode($result);
+      echo "event: active_update\n", "data: $data\n\n";
+    }
+  }
 
   $PDO_stm -> bindParam(':latest_id', $latest_id, PDO::PARAM_INT);
   $PDO_stm -> execute();
@@ -105,4 +127,5 @@ while (1) {
   flush();
   
   sleep(3);
+  $active_check_counter--;
 }

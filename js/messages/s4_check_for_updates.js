@@ -7,6 +7,21 @@ let event_source;
 let failure_count = 0;
 let connection_open = false;
 
+const active_users = document.getElementById('activeUsersList');
+
+function updateActiveUsers(event) {
+  const json = JSON.parse(event.data);
+  let active_users_inner = '';
+  
+  for(let x of json) {
+    active_users_inner += '<li>';
+    active_users_inner += x[0];
+    active_users_inner += '</li>';
+  }
+
+  active_users.innerHTML = active_users_inner;
+}
+
 function isVarDefined() {
   /*
   wait for latest_message_id to get defined
@@ -18,11 +33,12 @@ function isVarDefined() {
   clearInterval(myInterval);
 
   event_source = new EventSource
-  (`../php/messages/load_new_messages.php?latest=${latest_message_id}&user=${user.username_encoded}`);
+  (`../php/messages/check_for_updates.php?latest=${latest_message_id}&user=${user.username_encoded}`);
   event_source.addEventListener('new_msg', appendNewMessages);
   event_source.addEventListener('custom_error', handleCustomError);
   event_source.addEventListener('open', () => connection_open = true);
   event_source.addEventListener('error', unableToConnect);
+  event_source.addEventListener('active_update', updateActiveUsers);
 }
 
 function appendNewMessages(event) {

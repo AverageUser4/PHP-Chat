@@ -59,7 +59,7 @@ function validEmail(subject) {
 function validLogin(subject) {
   if(!validByteLength(subject, 3, 32))
     return [false, 'Login musi zawierać od 3 do 32 znaków.'];
-  if(!validChars(subject) || subject.includes('@'))
+  if(!validChars(subject) || subject.search(/[!-.:-@[-`~\x2f]/) !== -1)
     return [false, 'Login zawiera niedozwolone znaki.'];
   if(subject.startsWith('Gość'))
     return [false, 'Login nie może zaczynać się od słowa "Gość".'];    

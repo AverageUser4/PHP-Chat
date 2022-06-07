@@ -44,9 +44,8 @@ session_commit();
 
         <div id="activeUsersContainer" class="genericContainer">
           <h1>Aktywni użyktownicy</h1>
-          <ul>
-            <li>końik</li>
-            <li>mentos18</li>
+          <ul id="activeUsersList">
+            <?php echo "<li>$username</li>"; ?>
           </ul>
         </div>
 
@@ -140,7 +139,7 @@ session_commit();
   <script defer src="../js/messages/s1_messages_global.js"></script>
   <script defer src="../js/messages/s2_load_old_messages.js"></script>
   <script defer src="../js/messages/s3_send_message.js"></script>
-  <script defer src="../js/messages/s4_load_new_messages.js"></script>
+  <script defer src="../js/messages/s4_check_for_updates.js"></script>
   
   <script defer src="../js/run_when_loaded.js"></script>
   
