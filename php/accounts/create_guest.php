@@ -5,6 +5,7 @@ if(isset($_SESSION['id'])) {
   header('Location: ../../html_or_php/chat_room.php');
   exit();
 }
+session_commit();
 
 set_time_limit(1);
 set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat/php');

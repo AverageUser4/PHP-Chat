@@ -102,11 +102,6 @@ session_commit();
   </div>
 
   <style id="usersPicturesColors"></style>
-  
-  <input id="honeypot" type="text" style="display:none">
-  <a href="../php/honeypot/honeypot.php" style="display:none"
-  rel="nofollow">BAN ME(ACCESSING THIS LINK WILL BAN YOU)</a>
-
 
   <?php 
 

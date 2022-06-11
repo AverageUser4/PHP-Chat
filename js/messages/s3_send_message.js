@@ -4,7 +4,6 @@
 
 const input_field = document.getElementById('textInput');
 const send_button = document.getElementById('sendButton');
-const honey_pot = document.getElementById('honeypot');
 const sent_messages_array = [];
 let index_of_message_to_show;
 let msg = '';
@@ -120,9 +119,7 @@ function updateMessArr(enter_invoked = false) {
 function sendMessage() {
   // send message unless it's empty string or consists only of spaces
   // also some spam protection
-  if(honey_pot.value !== '')
-    return;
-
+  
   if(input_field.value === '')
     return;
 

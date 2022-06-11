@@ -1,6 +1,13 @@
 - spam protection
 - emotes
 - admin accounts
+- sound and icon notification when message is sent
 
+- jeżeli nie ma żadnych wiadomości nie da się wysłać nowej
 - (sugestia) po pobraniu document root z serwera wszystkie ścieżki mogą się zaczynać w tym samym miejscu
 - kolory czasem działają czasem nie
+- żeby działało na 000webhost trzeba było:
+  * usunąć /chat z set include path
+  * usunąć wszędzie set_time_limit
+  * zmienić dane do łączenia z bazą danych
+  * i coś jeszcze
