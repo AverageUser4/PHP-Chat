@@ -1,149 +1,209 @@
 <?php
 
+/*
+setUp - metoda wywołana przed każdym testem
+tearDown - metoda wykonana po każdym teście
+data provider - do wykonania tego samego testu kilka razy z innymi wartościami
+expectException - kiedy chcemy by metoda rzuciła wyjątek (trzeba użyć przed wywołaniem danej metody)
+*/
+
 namespace Tests\Unit;
 
-use Chat\PHP\Global\Validator;
+use PHP\Global\Validator;
 use PHPUnit\Framework\TestCase;
 set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat');
 require 'php/global/Validator.php';
 
 class ValidatorTest extends TestCase {
 
-  public function testGetExists() {
-    // 2 of 2 exist
+  /** @dataProvider getExistsAndPostExistsDP */
+  public function testGetExists($test_array, $expected) {
     $_GET['t1'] = 1;
     $_GET['t2'] = 2;
-    $result = Validator::getExists(['t1', 't2']);
-    $this -> assertTrue($result);
-
-    // 1 of 2 exists
-    $result = Validator::getExists(['t1', 'doesnot']);
-    $this -> assertFalse($result);
-
-    // array is empty
-    $result = Validator::getExists([]);
-    $this -> assertFalse($result);
+    $result = Validator::getExists($test_array);
+    $this -> assertSame($expected, $result);
   }
-
-  public function testPostExists() {
-    // 2 of 2 exist
+  /** @dataProvider getExistsAndPostExistsDP */
+  public function testPostExists($test_array, $expected) {
     $_POST['t1'] = 1;
     $_POST['t2'] = 2;
-    $result = Validator::postExists(['t1', 't2']);
-    $this -> assertTrue($result);
-
-    // 1 of 2 exists
-    $result = Validator::postExists(['t1', 'doesnot']);
-    $this -> assertFalse($result);
-
-    // array is empty
-    $result = Validator::postExists([]);
-    $this -> assertFalse($result);
+    $result = Validator::postExists($test_array);
+    $this -> assertSame($expected, $result);
+  }
+  public function getExistsAndPostExistsDP() {
+    return [ [['t1', 't2'], true], [['t1', 'doesnot'], false], [[], false] ];
   }
 
-  public function testValidByteLength() {
-    // valid somewhere between
-    $result = Validator::validByteLength('abcd', 1, 8);
-    $this -> assertTrue($result);
-
-    // valid equal to min and max
-    $result = Validator::validByteLength('abcd', 4, 4);
-    $this -> assertTrue($result);
-
-    // invalid byte length, valid character length (so overall invalid)
-    $result = Validator::validByteLength('🐘🐘🐘', 2, 5);
-    $this -> assertFalse($result);
-
-    // too short
-    $result = Validator::validByteLength('abcd', 5, 10);
-    $this -> assertFalse($result);
-
-    // too long
-    $result = Validator::validByteLength('abcd', 1, 3);
-    $this -> assertFalse($result);
+  /** @dataProvider validByteLengthDP */
+  public function testValidByteLength($test_string, $min, $max, $expected) {
+    $result = Validator::validByteLength($test_string, $min, $max);
+    $this -> assertSame($expected, $result);
+  }
+  public function validByteLengthDP() {
+    return [ 
+      ['abcd', 1, 8, true],
+      ['abcd', 4, 4, true],
+      ['🐘🐘🐘', 2, 5, false],
+      ['abcd', 5, 10, false],
+      ['abcd', 1, 3, false]
+   ];
   }
 
-  public function testValidChars() {
-    // valid string gets validated
-    $result = Validator::validChars("abcdef123🐘");
-    $this -> assertTrue($result);
-
-    // invalid: empty string
-    $result = Validator::validChars("");
-    $this -> assertFalse($result);
-
-    // invalid: consists only of spaces
-    $result = Validator::validChars("         ");
-    $this -> assertFalse($result);
-
-    // invalid: contains character from C group
-    $result = Validator::validChars("abc\u{000c}def");
-    $this -> assertFalse($result);
-
-    // invalid: contains character from Z group
-    $result = Validator::validChars("abc\u{2028}def");
-    $this -> assertFalse($result);
-    
-    // invalid: contains one of specified invalid characters
-    $result = Validator::validChars("abc\u{115f}def");
-    $this -> assertFalse($result);
+  /** @dataProvider validCharsDP */
+  public function testValidChars($test_string, $expected) {
+    $result = Validator::validChars($test_string);
+    $this -> assertSame($expected, $result);
+  }
+  public function validCharsDP() {
+    return [ 
+      ["abcdef123🐘", true],
+      ["", false],
+      ["  ", false], 
+      ["abc\u{000c}def", false],
+      ["abc\u{2028}def", false],
+      ["abc\u{115f}def", false]
+    ];
   }
 
-  public function testCustomEntities() {
-    // doesnt change a b or c
-    $result = Validator::customEntities('abc');
-    $this -> assertSame('abc', $result);
-
-    // changes all of characters it should change
-    $result = Validator::customEntities('%&"\'<>');
-    $this -> assertSame('&#37;&#38;&#34;&#39;&#60;&#62;', $result);
-
-    // changes character that occurs more than once
-    $result = Validator::customEntities('>x>');
-    $this -> assertSame('&#62;x&#62;', $result);
+  /** @dataProvider customEntitiesDP */
+  public function testCustomEntities($test_string, $expected) {
+    $result = Validator::customEntities($test_string);
+    $this -> assertSame($expected, $result);
+  }
+  public function customEntitiesDP() {
+    return [ 
+      ['abc', 'abc'],
+      ['%&"\'<>', '&#37;&#38;&#34;&#39;&#60;&#62;'],
+      ['>x>', '&#62;x&#62;']
+    ];
   }
 
   public function testValidEmail() {
-    // valid email gets validated
     $result = Validator::validEmail('valid@email.good');
     $this -> assertTrue($result);
-
-    // invalid email doen't get validated
     $result = Validator::validEmail('very invalid not email...');
     $this -> assertFalse($result);
   }
 
-  public function testValidUsername() {
-    // valid username gets validated
-    $result = Validator::validUsername('adam');
-    $this -> assertTrue($result);
-
-    // invalid length
-    $result = Validator::validUsername('a');
-    $this -> assertFalse($result);
-
-    // invalid characters (from valid chars)
-    $result = Validator::validUsername('\u{180e}');
-    $this -> assertFalse($result);
-
-    // invalid: starts with 'Gość'
-    $result = Validator::validUsername('GośćMega');
-    $this -> assertFalse($result);
-
-    // other invalid characters (specific to usernames)
-    $result = Validator::validUsername('abraham@gmail.com');
-    $this -> assertFalse($result);
+  /** @dataProvider validUsernameDP */
+  public function testValidUsername($test_string, $expected) {
+    $result = Validator::validUsername($test_string);
+    $this -> assertSame($expected, $result);
+  }
+  public function validUsernameDP() {
+    return [ 
+      ['adam', true],
+      ['a', false],
+      ["\u{180e}", false],
+      ['GośćMega', false],
+      ['abraham@gmail.com', false]
+    ];
   }
 
-  public static function validUsername($user) {
-    if(
-      !valid_byte_length($user, 3, 32)
-      || !valid_chars($user)
-      || str_starts_with($user, 'Gość')
-      || preg_match('/[!-.:-@[-`~]/', $user)
-      )
-      return false;
-    return true;
+  /** @dataProvider validGuestnameDP */
+  public function testValidGuestname($test_string, $expected) {
+    $result = Validator::validGuestname($test_string);
+    $this -> assertSame($expected, $result);
+  }
+  public function validGuestnameDP() {
+    return [
+      ['Gość 15', true],
+      ['go', false],
+      ["Gość 45\u{180e}", false],
+      ['Gość11111', false],
+      ['adran 505', false]
+    ];
   }
 
+  /** @dataProvider validPasswordDP */
+  public function testValidPassword($test_string, $expected) {
+    $result = Validator::validPassword($test_string);
+    $this -> assertSame($expected, $result);
+  }
+  public function validPasswordDP() {
+    return [
+      ['slicznykotek515🐈', true],
+      ['sho', false],
+      [str_repeat('a', 257), false]
+    ];
+  }
+
+  /** @dataProvider validMessageDP */
+  public function testValidMessage($test_string, $expected) {
+    $result = Validator::validMessage($test_string);
+    $this -> assertSame($expected, $result);
+  }
+  public function validMessageDP() {
+    return [
+      ['ale super ten chat 👍', true],
+      ['', false],
+      [str_repeat('👍', 100), false],
+      ["zakazany znak :) \u{180e}", false]
+    ];
+  }
+
+  /** @dataProvider validAccessTokenDP */
+  public function testValidAccessToken($test_string, $expected) {
+    $result = Validator::validAccessToken($test_string);
+    $this -> assertSame($expected, $result);
+  }
+  public function validAccessTokenDP() {
+    return [
+      [str_repeat('a', 64), true],
+      ['aaaaa', false],
+      [str_repeat('a', 65), false],
+      [str_repeat('x', 64), false]
+    ];
+  }
+
+  /** @dataProvider validIntDP */
+  public function testValidInt($test_int, $expected) {
+    $result = Validator::validInt($test_int);
+    $this -> assertSame($expected, $result);
+  }
+  public function validIntDP() {
+    return [
+      [123, true],
+      ['123', true],
+      [1.23, false],
+      [null, false],
+      ['2b27afc5ce31', false]
+    ];
+  }
+
+  /** @dataProvider validColorDP */
+  public function testValidColor($test_string, $expected) {
+    $result = Validator::validColor($test_string);
+    $this -> assertSame($expected, $result);
+  }
+  public function validColorDP() {
+    return [
+      ['0,0,0,0', true],
+      ['255,255,255,1', true],
+      ['1,2,5,0.3', true],
+      ['515, 0, 32, 0', false],
+      ['0,0,0,10', false],
+      ['0,0', false],
+      ['1.6,44,72,0.5', false],
+      [',,,', false],
+      ['a,b,c,d', false],
+      ['-5,5,5,3', false],
+      ['5,3,8,9,', false]
+    ];
+  }
+  
+  /** @dataProvider sanitizeGenderDP */
+  public function testSanitizeGender($test_string, $expected) {
+    $result = Validator::sanitizeGender($test_string);
+    $this -> assertSame($expected, $result);
+  }
+  public function sanitizeGenderDP() {
+    return [
+      ['male', 'male'],
+      ['female', 'female'],
+      ['other', 'other'],
+      ['fgdaf984', 'other']
+    ];
+  }
+  
 }

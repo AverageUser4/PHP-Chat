@@ -7,7 +7,6 @@ if(isset($_SESSION['id'])) {
 }
 session_commit();
 
-set_time_limit(1);
 set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat/php');
 
 if(!isset($_SERVER['REMOTE_ADDR']) 

@@ -1,6 +1,8 @@
 <?php
 
-namespace Chat\PHP\Global;
+declare(strict_types=1);
+
+namespace PHP\Global;
 
 class Validator {
 
@@ -41,7 +43,7 @@ class Validator {
     return true;
   }
   
-  public static function validChars($subject) {
+  public static function validChars(string $subject) {
     if(
         preg_match_all(Validator::SAFE_CHARS_REGEX, $subject) > preg_match_all('/ /', $subject)
         || strlen(trim($subject)) === 0
@@ -50,7 +52,7 @@ class Validator {
     return true;
   }
   
-  public static function customEntities($str) {
+  public static function customEntities(string $str) {
     //% is used as separator when sending message data
     $str = str_replace('&', '&#38;', $str);
     $str = str_replace('%', '&#37;', $str);
@@ -61,13 +63,13 @@ class Validator {
     return $str;
   }
   
-  public static function validEmail($email) {
+  public static function validEmail(string $email) {
     if(!filter_var($email, FILTER_VALIDATE_EMAIL))
       return false;
     return true;
   }
   
-  public static function validUsername($user) {
+  public static function validUsername(string $user) {
     if(
       !static::validByteLength($user, 3, 32)
       || !static::validChars($user)
@@ -78,7 +80,7 @@ class Validator {
     return true;
   }
   
-  public static function validGuestname($guest) {
+  public static function validGuestname(string $guest) {
     if(
       !static::validByteLength($guest, 3, 32)
       || !static::validChars($guest)
@@ -89,13 +91,13 @@ class Validator {
     return true;
   }
   
-  public static function validPassword($password) {
+  public static function validPassword(string $password) {
     if(!static::validByteLength($password, 5, 256))
       return false;
     return true;
   }
   
-  public static function validMessage($msg) {
+  public static function validMessage(string $msg) {
     if(
       !static::validByteLength($msg, 1, 256)
       || !static::validChars($msg)
@@ -104,11 +106,10 @@ class Validator {
     return true;
   }
   
-  public static function validAccessToken($token) {
+  public static function validAccessToken(string $token) {
     if(
-      is_null($token)
-      || !static::validByteLength($token, 64, 64)
-      || !ctype_alnum($token)
+      !static::validByteLength($token, 64, 64)
+      || preg_match('/[^0-9a-f]/', $token)
       )
       return false;
     return true;
@@ -120,20 +121,20 @@ class Validator {
     return true;
   }
   
-  public static function validColor($color_str) {
+  public static function validColor(string $color_str) {
     $arr = explode(',', $color_str);
     if(
       count($arr) !== 4
-      || (!$arr[0] == 0 && !filter_var($arr[0], FILTER_VALIDATE_INT, ['min_range' => 0, 'max_range' => 255]))
-      || (!$arr[1] == 0 && !filter_var($arr[1], FILTER_VALIDATE_INT, ['min_range' => 0, 'max_range' => 255]))
-      || (!$arr[2] == 0 && !filter_var($arr[2], FILTER_VALIDATE_INT, ['min_range' => 0, 'max_range' => 255]))
-      || (!$arr[3] == 0 && !filter_var($arr[3], FILTER_VALIDATE_FLOAT, ['min_range' => 0, 'max_range' => 1]))
+      || filter_var($arr[0], FILTER_VALIDATE_INT, ['options' => ['min_range' => 0, 'max_range' => 255]]) === false
+      || filter_var($arr[1], FILTER_VALIDATE_INT, ['options' => ['min_range' => 0, 'max_range' => 255]]) === false
+      || filter_var($arr[2], FILTER_VALIDATE_INT, ['options' => ['min_range' => 0, 'max_range' => 255]]) === false
+      || filter_var($arr[3], FILTER_VALIDATE_FLOAT, ['options' => ['min_range' => 0, 'max_range' => 1]]) === false
       )
       return false;
     return true;
   }
   
-  public static function sanitizeGender($gender) {
+  public static function sanitizeGender(string $gender) {
     if($gender === 'male')return 'male';
     if($gender === 'female')return 'female';
     return 'other';

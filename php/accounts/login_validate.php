@@ -1,6 +1,5 @@
 <?php
 
-set_time_limit(1);
 set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat/php');
 require_once 'global/validate.php';
 

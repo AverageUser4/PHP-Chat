@@ -1,13 +1,10 @@
 <?php
 
-function validByteLength(string $subject, int $min, int $max) {
-  assert($min <= $max);
-  assert($min >= 0);
+declare(strict_types=1);
 
-  $len = strlen($subject);
-  if($len < $min || $len > $max)
-    return false;
-  return true;
-}
+use PHP\Global\PDOConnection;
 
-var_dump(validByteLength('abc', -3, 0));
+require 'php/global/PDOConnection.php';
+
+$PDOC = new PDOConnection();
+var_dump($PDOC);
