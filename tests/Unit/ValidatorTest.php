@@ -11,8 +11,6 @@ namespace Tests\Unit;
 
 use PHP\Global\Validator;
 use PHPUnit\Framework\TestCase;
-set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat');
-require 'php/global/Validator.php';
 
 class ValidatorTest extends TestCase {
 

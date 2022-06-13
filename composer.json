@@ -1,4 +1,10 @@
 {
+    "autoload": {
+      "psr-4": {
+        "PHP\\": "php/"
+      }
+    },
+
     "require-dev": {
         "phpunit/phpunit": "9.5"
     }

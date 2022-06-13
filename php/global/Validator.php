@@ -9,7 +9,6 @@ class Validator {
   const SAFE_CHARS_REGEX = "/[\p{C}\p{Z}\u{034f}\u{115f}\u{1160}\u{17b4}\u{17b5}\u{180e}\u{2800}\u{3164}\u{ffa0}]/u";
 
   public static function failureExit($e) { exit("error%$e"); }
-  public static function failureReturn($e) { return "error%$e"; }
 
   public static function getExists(array $arr) {
     if(empty($arr))

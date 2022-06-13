@@ -3,6 +3,8 @@
 - admin accounts
 - sound and icon notification when message is sent
 
+
+- po pierwszym timeoucie (1h) check_for_updates.php łaczy się i przerywa prawie natychmiast
 - jeżeli nie ma żadnych wiadomości nie da się wysłać nowej
 - (sugestia) po pobraniu document root z serwera wszystkie ścieżki mogą się zaczynać w tym samym miejscu
 - kolory czasem działają czasem nie

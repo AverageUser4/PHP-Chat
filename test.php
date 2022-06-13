@@ -2,9 +2,16 @@
 
 declare(strict_types=1);
 
-use PHP\Global\PDOConnection;
+    // username, message and date
+    // for($i = 0; $i < $len; $i++) {
+    //   $messages_string .= $this -> query_result[$i]['username'] .= '%';
+    //   $messages_string .= $this -> query_[$i]['content'] .= '%';
+    //   $messages_string .= $this -> query_[$i]['date'];
+    //   $i != $len - 1 ? $messages_string .= '%' : 0;
 
-require 'php/global/PDOConnection.php';
+$test = new class {
+  public $metadata = ['abc', 'def', 7];
+  public $messagedata = [['user1', 'bekaxd', '2020-03-03'], ['user2', 'xd', '2020-03-03']];
+};
 
-$PDOC = new PDOConnection();
-var_dump($PDOC);
+var_dump(json_encode($test));

@@ -1,33 +1,20 @@
 <?php
 
-set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat/php');
-require_once 'global/validate.php';
+declare(strict_types=1);
 
-session_start();
-if(!isset($_SESSION['id']))
-  failure('Użytkownik nie jest zalogowany.');
-$user_id = $_SESSION['id'];
-session_commit();
-  
-/* user input validation */
-if(!isset($_GET['message']))
-  failure('No message provided.');
+set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat');
+require 'vendor/autoload.php';
 
-$msg = customEntities($_GET['message']);
+use PHP\Messages\MessageSender;
 
-if(!valid_message($msg))
-  failure('There is a problem with provided message.');
+// for testing
+// session_start();
+// $_SESSION['id'] = 2;
+// session_commit();
+// $_GET['message'] = 'abcd';
 
-
-/* insert message into the database */
-require_once 'global/pdo_connect.php';
-if(!$PDO instanceof PDO)
-  failure($PDO);
-
-$PDO_Statement = $PDO -> prepare("INSERT INTO messages VALUES (null, $user_id, :message, NOW())");
-$PDO_Statement -> bindParam(':message', $msg, PDO::PARAM_STR);
-if(!$PDO_Statement -> execute())
-  failure('Database query did not succeed.');
-
+$message_sender = new MessageSender();
+$message_sender -> initialSetUp();
+$message_sender -> initAndRunPDO();
 
 echo '1';
