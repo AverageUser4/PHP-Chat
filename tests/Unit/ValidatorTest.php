@@ -29,7 +29,12 @@ class ValidatorTest extends TestCase {
     $this -> assertSame($expected, $result);
   }
   public function getExistsAndPostExistsDP() {
-    return [ [['t1', 't2'], true], [['t1', 'doesnot'], false], [[], false] ];
+    return [ 
+      'first and second exists' => [['t1', 't2'], true],
+      'only first exists' => [['t1', 'doesnot'], false],
+      'only second exists' => [['doestnot', 't2'], false],
+      'array is empty' => [[], false]
+    ];
   }
 
   /** @dataProvider validByteLengthDP */
@@ -39,11 +44,11 @@ class ValidatorTest extends TestCase {
   }
   public function validByteLengthDP() {
     return [ 
-      ['abcd', 1, 8, true],
-      ['abcd', 4, 4, true],
-      ['🐘🐘🐘', 2, 5, false],
-      ['abcd', 5, 10, false],
-      ['abcd', 1, 3, false]
+      'valid length' => ['abcd', 1, 8, true],
+      'valid identical length' => ['abcd', 4, 4, true],
+      'too long multibyte string' => ['🐘🐘🐘', 2, 5, false],
+      'too short' => ['abcd', 5, 10, false],
+      'too long' => ['abcd', 1, 3, false]
    ];
   }
 
@@ -54,12 +59,12 @@ class ValidatorTest extends TestCase {
   }
   public function validCharsDP() {
     return [ 
-      ["abcdef123🐘", true],
-      ["", false],
-      ["  ", false], 
-      ["abc\u{000c}def", false],
-      ["abc\u{2028}def", false],
-      ["abc\u{115f}def", false]
+      'valid with special character' => ["abcdef123🐘", true],
+      'empty string' => ["", false],
+      'only spaces' => ["  ", false], 
+      'invalid character C group' => ["abc\u{000c}def", false],
+      'invalid character Z' => ["abc\u{2028}def", false],
+      'invalid character other' => ["abc\u{115f}def", false]
     ];
   }
 
@@ -70,9 +75,9 @@ class ValidatorTest extends TestCase {
   }
   public function customEntitiesDP() {
     return [ 
-      ['abc', 'abc'],
-      ['%&"\'<>', '&#37;&#38;&#34;&#39;&#60;&#62;'],
-      ['>x>', '&#62;x&#62;']
+      'normal string' => ['abc', 'abc'],
+      'all characters to be chganged' => ['%&"\'<>', '&#37;&#38;&#34;&#39;&#60;&#62;'],
+      'same character multiple times' => ['>x>>', '&#62;x&#62;&#62;']
     ];
   }
 
@@ -90,11 +95,11 @@ class ValidatorTest extends TestCase {
   }
   public function validUsernameDP() {
     return [ 
-      ['adam', true],
-      ['a', false],
-      ["\u{180e}", false],
-      ['GośćMega', false],
-      ['abraham@gmail.com', false]
+      'valid username' => ['adam', true],
+      'too short' => ['a', false],
+      'contains invalid character' => ["abcder\u{180e}", false],
+      'starts with Gość' => ['GośćMega', false],
+      'contains invalid character (@)' => ['abraham@gmail.com', false]
     ];
   }
 
@@ -105,11 +110,11 @@ class ValidatorTest extends TestCase {
   }
   public function validGuestnameDP() {
     return [
-      ['Gość 15', true],
-      ['go', false],
-      ["Gość 45\u{180e}", false],
-      ['Gość11111', false],
-      ['adran 505', false]
+      'valid guest name' => ['Gość 15', true],
+      'too short' => ['go', false],
+      'contains invalid character' => ["Gość 45\u{180e}", false],
+      'does not contain space' => ['Gość11111', false],
+      'does not start with Gość but contains space and number' => ['adrian 505', false]
     ];
   }
 
@@ -120,9 +125,9 @@ class ValidatorTest extends TestCase {
   }
   public function validPasswordDP() {
     return [
-      ['slicznykotek515🐈', true],
-      ['sho', false],
-      [str_repeat('a', 257), false]
+      'valid password' => ['slicznykotek515🐈', true],
+      'too short' => ['sho', false],
+      'too long' => [str_repeat('a', 257), false]
     ];
   }
 
@@ -133,10 +138,11 @@ class ValidatorTest extends TestCase {
   }
   public function validMessageDP() {
     return [
-      ['ale super ten chat 👍', true],
-      ['', false],
-      [str_repeat('👍', 100), false],
-      ["zakazany znak :) \u{180e}", false]
+      'valid ascii message' => ['abc123', true], 
+      'valid message with emoji' => ['ale super ten chat 👍', true],
+      'empty message' => ['', false],
+      'too long with multibyte characters' => [str_repeat('👍', 100), false],
+      'contains invalid character' => ["zakazany znak :) \u{180e}", false]
     ];
   }
 
@@ -147,10 +153,10 @@ class ValidatorTest extends TestCase {
   }
   public function validAccessTokenDP() {
     return [
-      [str_repeat('a', 64), true],
-      ['aaaaa', false],
-      [str_repeat('a', 65), false],
-      [str_repeat('x', 64), false]
+      'theoretically valid token' => [str_repeat('a', 64), true],
+      'valid chars, too short' => ['aaaaa', false],
+      'valid chars, too long' => [str_repeat('a', 65), false],
+      'invalid chars, valid length' => [str_repeat('x', 64), false]
     ];
   }
 
@@ -161,11 +167,11 @@ class ValidatorTest extends TestCase {
   }
   public function validIntDP() {
     return [
-      [123, true],
-      ['123', true],
-      [1.23, false],
-      [null, false],
-      ['2b27afc5ce31', false]
+      'normal valid int' => [123, true],
+      'valid string to be converted in int' => ['123', true],
+      'invalid float' => [1.23, false],
+      'invalid null' => [null, false],
+      'invalid base16' => ['2b27afc5ce31', false]
     ];
   }
 
@@ -176,17 +182,18 @@ class ValidatorTest extends TestCase {
   }
   public function validColorDP() {
     return [
-      ['0,0,0,0', true],
-      ['255,255,255,1', true],
-      ['1,2,5,0.3', true],
-      ['515, 0, 32, 0', false],
-      ['0,0,0,10', false],
-      ['0,0', false],
-      ['1.6,44,72,0.5', false],
-      [',,,', false],
-      ['a,b,c,d', false],
-      ['-5,5,5,3', false],
-      ['5,3,8,9,', false]
+      'only zeros (minimal accepted values)' => ['0,0,0,0', true],
+      'maximal accepted values' => ['255,255,255,1', true],
+      'random valid values' => ['1,2,5,0.3', true],
+      'one int too big' => ['515, 0, 32, 0', false],
+      'float to big' => ['0,0,0,10', false],
+      'only two values' => ['0,0', false],
+      'float where int expected' => ['1.6,44,72,0.5', false],
+      'only commas with no values' => [',,,', false],
+      'letters instead of numbers' => ['a,b,c,d', false],
+      'negative number on int place' => ['5,-5,5,3', false],
+      'negative number on float place' => ['5,5,5,-1', false],
+      'trailing comma' => ['5,3,8,0,', false]
     ];
   }
   
@@ -197,10 +204,10 @@ class ValidatorTest extends TestCase {
   }
   public function sanitizeGenderDP() {
     return [
-      ['male', 'male'],
-      ['female', 'female'],
-      ['other', 'other'],
-      ['fgdaf984', 'other']
+      'male given expected' => ['male', 'male'],
+      'female given and expected' => ['female', 'female'],
+      'other given adn expected' => ['other', 'other'],
+      'random string given and other expected' => ['fgdaf984', 'other']
     ];
   }
   

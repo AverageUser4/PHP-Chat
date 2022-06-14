@@ -30,6 +30,8 @@ class MessageSender {
     $this -> message = Validator::customEntities($_GET['message']);
     if(!Validator::validMessage($this -> message))
       Validator::failureExit('There is a problem with provided message.');
+
+    return true;
   }
 
   public function initAndRunPDO() {

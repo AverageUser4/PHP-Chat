@@ -9,7 +9,7 @@ use PHP\Global\Validator;
 class OldMessagesLoader extends InitialMessagesLoader {
 
   public function additionalSetUp() {
-    if(!filter_var($_GET['oldest'], FILTER_VALIDATE_INT))
+    if(filter_var($_GET['oldest'], FILTER_VALIDATE_INT) === false)
       Validator::failureExit('Niepoprawny numer ID wiadomości.');
 
     $this -> oldest_message_id = $_GET['oldest'];
@@ -21,11 +21,13 @@ class OldMessagesLoader extends InitialMessagesLoader {
     };
   }
 
+  public function echoOrReturn() {
+    echo json_encode($this -> return_data);
+  }
+
   public function includeInitialSpecificData() { return; }
 
 }
-
-
 
 
 

@@ -9,23 +9,34 @@ let no_more_old_messages = false;
 function getMessagesWhenLoaded() {
   // insert messages we asked for into the output field
 
-  const arr = document.getElementById('old_mes_data').innerHTML.split('%');
-
-  if(arr[0] === 'error') { alert(arr[1]); return; }
+  const old_mes_data = document.getElementById('old_mes_data');
+  if(old_mes_data.innerHTML.startsWith('error%')) {
+    alert(old_mes_data.innerHTML.slice(6));
+    return;
+  }
+  const json_data = JSON.parse(old_mes_data.innerHTML);
+  // json_data(obj) -> messages_data, oldest_message_id, latest_message_id, server_time
+  // json_data(obj) -> messages_data(arr) -> arr_elements(obj) -> message_id, username, content, data
   
-  let len = arr.length;
-  let server_time = arr[0];
-  let client_time = Math.trunc(Date.now() / 1000);
+  const len = json_data.messages_data.length;
+  const server_time = json_data.server_time;
+  const client_time = Math.trunc(Date.now() / 1000);
   client_server_time_difference = client_time - server_time;
 
-  latest_message_id = arr[1];
-  oldest_message_id = arr[2];
+  latest_message_id = json_data.latest_message_id;
+  oldest_message_id = json_data.oldest_message_id;
 
-  if(len === 153)
+  console.log(len);
+  if(len === 50)
     output_container.addEventListener('scroll', scrolledToTop);
   
-  for(let i = 3; i < len; i += 3)
-    createMessageElement(arr[i], parseMessageDate(arr[i + 2]), arr[i + 1], false);
+  for(let i = 0; i < len; i++)
+    createMessageElement(
+      json_data.messages_data[i].username,
+      parseMessageDate(json_data.messages_data[i].date),
+      json_data.messages_data[i].content,
+      false
+    );
 
   output_container.scrollTo(0, 999999);
 }
@@ -48,21 +59,19 @@ function scrolledToTop() {
 function readIncomingOldMessages() {
   // store requested messages in array
 
-  old_messages_array = this.responseText.split('%');
-
-  if(old_messages_array[0] === 'error') {
-    alert(old_messages_array[1]);
+  if(this.responseText.startsWith('error%')) {
+    alert(this.responseText.slice(6));
     return;
   }
 
-  let len = old_messages_array.length;
-  oldest_message_id = old_messages_array[0];
+  const json_data = JSON.parse(this.responseText);
+  old_messages_array = json_data.messages_data;
 
-  //451, 61 for testing
-  if(len < 451)
+  const len = old_messages_array.length;
+  oldest_message_id = json_data.oldest_message_id;
+
+  if(len < 150)
     no_more_old_messages = true;
-
-  old_messages_array.shift();
 
   updateOldMessage();
 }
@@ -70,12 +79,13 @@ function readIncomingOldMessages() {
 function updateOldMessage() {
   // when users scrolls to top, one message from array is inserted at once
 
-  let init_height = output_container.scrollHeight;
+  const init_height = output_container.scrollHeight;
 
-  if(old_messages_array.length >= 3) {
-    const h3 = old_messages_array.shift();
-    const p = old_messages_array.shift();
-    const h4 = parseMessageDate(old_messages_array.shift());
+  if(old_messages_array.length >= 1) {
+    const h3 = old_messages_array[0].username;
+    const p = old_messages_array[0].content;
+    const h4 = parseMessageDate(old_messages_array[0].date);
+    old_messages_array.shift();
     createMessageElement(h3, h4, p, false)
   }
 

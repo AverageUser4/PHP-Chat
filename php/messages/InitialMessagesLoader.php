@@ -14,27 +14,26 @@ class InitialMessagesLoader {
   protected $oldest_message_id;
   protected $limit;
   protected $PDO_connection;
-  protected $query_result;
-  protected $result_len;
-  protected $return_data;
-
-  public function __construct() {
-    $this -> oldest_message_id = PHP_INT_MAX;
-    $this -> limit = 50;
-  }
+  public $query_result;
+  public $result_len;
+  public $return_data;
 
   public function setUp() {
     set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat');
     require_once 'vendor/autoload.php';
     $this -> additionalSetUp();
+    return true;
   }
 
   public function additionalSetUp() {
+    $this -> oldest_message_id = PHP_INT_MAX;
+    $this -> limit = 50;
+
     $this -> return_data = new class {
       public $messages_data = [];
       public $oldest_message_id;
       public $latest_message_id;
-      public $date_time;
+      public $server_time;
     };
   }
 
@@ -51,15 +50,9 @@ class InitialMessagesLoader {
       Validator::failureExit('Zapytanie do bazy danych nie powiodło się.');
 
     $this -> query_result = $PDO_stm -> fetchAll(PDO::FETCH_ASSOC);
-    if($this -> result_len = count($this -> query_result) === 0) 
+    $this -> result_len = count($this -> query_result);
+    if($this -> result_len === 0) 
       Validator::failureExit("Nie ma już więcej wiadomości.");
-  }
-
-  protected function includeInitialSpecificData() {
-    // send server time to adjust shown messages date
-    $dt = new DateTime();
-    $this -> return_data -> date_time = $dt -> format('U');
-    $this -> return_data -> latest_message_id = $this -> query_result[0]['message_id'];
   }
 
   public function formatAndSendMessages() {
@@ -69,18 +62,30 @@ class InitialMessagesLoader {
     
     for($i = 0; $i < $this -> result_len; $i++) {
       $buf_obj = new class {
+        public $message_id;
         public $username;
         public $content;
         public $date;
       };
+      $buf_obj -> message_id = $this -> query_result[$i]['message_id'];
       $buf_obj -> username = $this -> query_result[$i]['username'];
-      $buf_obj -> content = $this -> query_[$i]['content'];
-      $buf_obj -> date =  $this -> query_[$i]['date'];
+      $buf_obj -> content = $this -> query_result[$i]['content'];
+      $buf_obj -> date =  $this -> query_result[$i]['date'];
 
-      $this -> return_data -> message_data[] = $buf_obj;
+      $this -> return_data -> messages_data[] = $buf_obj;
     }
-    
-    echo json_encode($this -> return_data);
+  }
+
+  public function echoOrReturn() {
+    // messages are returned in order from the newest to the oldest
+    return json_encode($this -> return_data);
+  }
+
+  protected function includeInitialSpecificData() {
+    // send server time to adjust shown messages date
+    $dt = new DateTime();
+    $this -> return_data -> server_time = $dt -> format('U');
+    $this -> return_data -> latest_message_id = $this -> query_result[0]['message_id'];
   }
 
 }
