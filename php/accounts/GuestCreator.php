@@ -3,9 +3,6 @@
 declare(strict_types=1);
 namespace PHP\Accounts;
 
-set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat');
-require_once 'vendor/autoload.php';
-
 use PHP\Global\PDOConnection;
 use \PDO;
 
@@ -25,15 +22,11 @@ class GuestCreator {
     protected $gender = 'other',
     protected $account_type = 'guest',
     protected $user_id = 'undef'
-  ) { ; }
-
-  public function setUp() {
-    set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat');
-    require_once 'vendor/autoload.php';
+  ) {
     $this -> PDO_connection = new PDOConnection();
   }
 
-  public function setRandomColorString() {
+  protected function setRandomColorString() {
     $r = random_int(0, 255);
     $g = random_int(0, 255);
     $b = random_int(0, 255);
@@ -41,7 +34,7 @@ class GuestCreator {
     $this -> color_string = "$r,$g,$b,$a";
   }
 
-  public function setUpPDOStatement() {
+  protected function setUpPDOStatement() {
     $this -> first_PDO_stm = $this -> PDO_connection -> PDO -> prepare(
       "INSERT INTO users VALUES 
       (
@@ -67,6 +60,7 @@ class GuestCreator {
   }
 
   public function insertNewGuest() {
+    $this -> setUpPDOStatement();
     $this -> setRandomColorString();
     $this -> access_token = bin2hex(random_bytes(32));
     $this -> hash = 'undef';
@@ -95,6 +89,7 @@ class GuestCreator {
 
     $this -> PDO_connection -> PDO -> commit();
     setcookie('access_token', $this -> access_token, time() + 60*60*24*365, '/');
+    $_COOKIE['access_token'] = $this -> access_token;
     return [true, $result[0]];
   }
 

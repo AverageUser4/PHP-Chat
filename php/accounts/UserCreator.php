@@ -1,55 +1,14 @@
 <?php
 
-/*
-
-
-
-
-
-
-NAPISAĆ TESTY DLA GUEST I USER CREATOR
-
-
-
-
-
-
-
-
-
-*/
-
 declare(strict_types=1);
 namespace PHP\Accounts;
-
-set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat');
-require_once 'vendor/autoload.php';
 
 use PHP\Accounts\GuestCreator;
 use \PDO;
 
 class UserCreator extends GuestCreator {
 
-  public function insertNewUser() {
-    $this -> setRandomColorString();
-  
-    $test = $this -> checkEmailAndUsernameTaken();
-    if(!$test[0])
-      return[false, $test[1]];
-
-    $this -> access_token = 'undef';
-    $this -> hash = password_hash($this -> password, PASSWORD_DEFAULT);
-  
-    $this -> setUPPDOStatement();
-    
-    if(!$this -> first_PDO_stm -> execute())
-      return [false, 'Nie udało się dodać użytkownika do bazy danych.'];
-
-    setcookie('access_token', $this -> access_token, time() + 60*60*24*365, '/');
-    return [true, true];
-  }
-
-  public function checkEmailAndUsernameTaken() {
+  protected function checkEmailAndUsernameTaken() {
     $query = "SELECT id FROM users WHERE email = :email";
     $PDO_stm = $this -> PDO_connection -> PDO -> prepare($query);
     $PDO_stm -> bindParam(':email', $this -> email);
@@ -67,6 +26,25 @@ class UserCreator extends GuestCreator {
       return [false, 'uLogin zajęty.'];
   
     return [true, 1];
+  }
+
+  public function insertNewUser() {
+    $this -> setUpPDOStatement();
+    $this -> setRandomColorString();
+  
+    $test = $this -> checkEmailAndUsernameTaken();
+    if(!$test[0])
+      return[false, $test[1]];
+
+    $this -> access_token = 'undef';
+    $this -> hash = password_hash($this -> password, PASSWORD_DEFAULT);
+      
+    if(!$this -> first_PDO_stm -> execute())
+      return [false, 'Nie udało się dodać użytkownika do bazy danych.'];
+
+    setcookie('access_token', $this -> access_token, time() + 60*60*24*365, '/');
+    $_COOKIE['access_token'] = $this -> access_token;
+    return [true, true];
   }
 
   public function changeGuestToUser() {
@@ -99,6 +77,9 @@ class UserCreator extends GuestCreator {
     $_SESSION['gender'] = $this -> gender;
     $_SESSION['account_type'] = 'user';
     session_commit();
+    setcookie('access_token', 'undef', time() + 60*60*24*365, '/');
+    $_COOKIE['access_token'] = 'undef';
+    // zrobić tu i może w paru innych miejscach pełne wylogowanie
 
     return [true, true];
   }

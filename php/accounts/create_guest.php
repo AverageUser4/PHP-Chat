@@ -2,27 +2,26 @@
 
 session_start();
 if(isset($_SESSION['id'])) {
-  header('Location: ../../html_or_php/chat_room.php');
+  $location = 'Location: http://' . $_SERVER['SERVER_NAME'] .
+  '/chat/html_or_php/chat_room.php';
+  header($location);
   exit();
 }
 session_commit();
 
-set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat/php');
+set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat');
+require_once 'vendor/autoload.php';
 
-if(!isset($_SERVER['REMOTE_ADDR']) 
-  || !filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP)
-  ) $ip = 'null';
-else $ip = $_SERVER['REMOTE_ADDR'];
+use PHP\Accounts\GuestCreator;
 
-require_once 'accounts/reusable.php';
-$success = insert_new_user($ip);
+$guest_creator = new GuestCreator();
+$success = $guest_creator -> insertNewGuest();
 
 if(!$success[0]) {
-  session_start();
-  $_SESSION['sww_err'] = $success[1];
-  session_commit();
-  header("Location: ../../html_or_php/something_went_wrong.php");
+  $location = 'Location: http://' . $_SERVER['SERVER_NAME'] .
+  '/chat/html_or_php/something_went_wrong.php?msg=' . urlencode($success[1]);
+  header($location);
   exit();
 }
 
-header('Location: verify_user.php');
+require_once 'check_user.php';
