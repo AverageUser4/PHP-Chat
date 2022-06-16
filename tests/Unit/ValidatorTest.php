@@ -9,7 +9,7 @@ expectException - kiedy chcemy by metoda rzuciła wyjątek (trzeba użyć przed 
 
 namespace Tests\Unit;
 
-use PHP\Global\Validator;
+use PHP\Classes\Global\Validator;
 use PHPUnit\Framework\TestCase;
 
 class ValidatorTest extends TestCase {

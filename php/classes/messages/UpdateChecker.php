@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PHP\Messages;
+namespace PHP\Classes\Messages;
 
+use PHP\Classes\Global\PDOConnection;
 use \PDO;
 
 class UpdateChecker {
@@ -17,13 +18,14 @@ class UpdateChecker {
   private $PDO_stm_new_messages;
   private $PDO_stm_active_users;
   private $check_active_counter;
-  
 
-  public function loop() {
-    while(1) {;}
+  public function setUpAndStartLoop() {
+    $this -> setUp();
+    $this -> setUpDBConnection();
+    $this -> runLoop();
   }
 
-  public function initialSetUp() {
+  private function setUp() {
     header("Content-Type: text/event-stream");
     header('Cache-Control: no-cache');
 
@@ -48,8 +50,8 @@ class UpdateChecker {
     return true;
   }
 
-  public function setUpDBConnection($new_pdo_connection_obj) {
-    $this -> PDO_connection = $new_pdo_connection_obj;
+  private function setUpDBConnection() {
+    $this -> PDO_connection = new PDOConnection;
 
     $this -> new_messages_query = 
     "SELECT m.message_id, m.content, m.date, u.username
@@ -70,7 +72,7 @@ class UpdateChecker {
     $this -> PDO_connection -> PDO -> query("UPDATE users SET active = 1 WHERE id = " . $this -> user_id);
   }
 
-  public function runLoop() {   
+  private function runLoop() {   
     while (1) {
       /* check database every 3 seconds, if there are messages
       that were sent by someone else than the user, send them to user */
@@ -88,7 +90,7 @@ class UpdateChecker {
     }
   }
 
-  public function checkActive() {
+  private function checkActive() {
     if($this -> check_active_counter === 0) {
       $this -> check_active_counter = 4;
 
@@ -103,7 +105,7 @@ class UpdateChecker {
     $this -> check_active_counter--;
   }
 
-  public function checkNewMessages() {
+  private function checkNewMessages() {
     $this -> PDO_stm_new_messages -> 
     bindParam(':latest_id', $this -> latest_message_id, PDO::PARAM_INT);
     $this -> PDO_stm_new_messages -> execute();
@@ -128,7 +130,7 @@ class UpdateChecker {
       echo "event: ping\n", "data: 1\n\n";
   }
 
-  public static function shutdownHandler($uc_obj) {
+  private static function shutdownHandler($uc_obj) {
     if(isset($uc_obj -> PDO_connection))
       $uc_obj -> PDO_connection -> PDO -> query("UPDATE users SET active = 0 WHERE id = " . $uc_obj -> user_id);
 

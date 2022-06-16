@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PHP\Accounts;
+namespace PHP\Classes\Accounts;
 
-use PHP\Global\PDOConnection;
+use PHP\Classes\Global\PDOConnection;
 
 class ActiveStateChanger {
 

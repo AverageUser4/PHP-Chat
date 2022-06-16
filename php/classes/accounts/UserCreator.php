@@ -1,9 +1,9 @@
 <?php
 
 declare(strict_types=1);
-namespace PHP\Accounts;
+namespace PHP\Classes\Accounts;
 
-use PHP\Accounts\GuestCreator;
+use PHP\Classes\Accounts\GuestCreator;
 use \PDO;
 
 class UserCreator extends GuestCreator {

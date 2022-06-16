@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
+use PHP\Classes\Accounts\Loginer;
+use PHP\Classes\Global\Validator;
+
 set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat');
 require_once 'vendor/autoload.php';
-
-use PHP\Accounts\Loginer;
-use PHP\Global\Validator;
 
 if(!isset($_COOKIE['access_token'])) {
   $location = 'Location: http://' . $_SERVER['SERVER_NAME'] .

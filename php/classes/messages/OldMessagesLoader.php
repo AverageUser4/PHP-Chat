@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PHP\Messages;
+namespace PHP\Classes\Messages;
 
-use PHP\Global\Validator;
+use PHP\Classes\Global\Validator;
 
 class OldMessagesLoader extends InitialMessagesLoader {
 

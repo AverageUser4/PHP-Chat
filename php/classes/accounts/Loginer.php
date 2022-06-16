@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace PHP\Accounts;
+namespace PHP\Classes\Accounts;
 
-use PHP\Global\PDOConnection;
-use PHP\Accounts\ActiveStateChanger;
+use PHP\Classes\Global\PDOConnection;
+use PHP\Classes\Accounts\ActiveStateChanger;
 use \PDO;
 
 class Loginer {

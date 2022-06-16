@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
+use PHP\Classes\Global\Validator;
+use PHP\Classes\Accounts\UserInfoRetriever;
+
 set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat');
 require_once 'vendor/autoload.php';
-
-use PHP\Global\Validator;
-use PHP\Global\PDOConnection;
-use PHP\Accounts\UserInfoRetriever;
 
 if(!isset($_GET['username']))
   Validator::failureExit('Nie podano nazwy użytkownika');

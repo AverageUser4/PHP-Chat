@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+use PHP\Classes\Accounts\GuestCreator;
+
 session_start();
 if(isset($_SESSION['id'])) {
   $location = 'Location: http://' . $_SERVER['SERVER_NAME'] .
@@ -11,8 +15,6 @@ session_commit();
 
 set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat');
 require_once 'vendor/autoload.php';
-
-use PHP\Accounts\GuestCreator;
 
 $guest_creator = new GuestCreator();
 $success = $guest_creator -> insertNewGuest();

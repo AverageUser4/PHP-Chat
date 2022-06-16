@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use PHP\Messages\OldMessagesLoader;
+use PHP\Classes\Messages\OldMessagesLoader;
 
 class OldMessagesLoaderTest extends TestCase {
 

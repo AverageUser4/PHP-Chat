@@ -5,7 +5,7 @@ declare(strict_types=1);
 set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat');
 require 'vendor/autoload.php';
 
-use PHP\Messages\MessageSender;
+use PHP\Classes\Messages\MessageSender;
 
 // for testing
 // session_start();
@@ -14,7 +14,6 @@ use PHP\Messages\MessageSender;
 // $_GET['message'] = 'abcd';
 
 $message_sender = new MessageSender();
-$message_sender -> initialSetUp();
-$message_sender -> initAndRunPDO();
+$message_sender -> send();
 
 echo '1';

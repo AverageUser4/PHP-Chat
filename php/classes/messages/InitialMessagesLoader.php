@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace PHP\Messages;
+namespace PHP\Classes\Messages;
 
-use PHP\Global\Validator;
-use PHP\Global\PDOConnection;
+use PHP\Classes\Global\Validator;
+use PHP\Classes\Global\PDOConnection;
 use \PDO;
 use \DateTime;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PHP\Global;
+namespace PHP\Classes\Global;
 
 class Validator {
 

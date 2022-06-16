@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace PHP\Accounts;
+namespace PHP\Classes\Accounts;
 
-use PHP\Accounts\ActiveStateChanger;
+use PHP\Classes\Accounts\ActiveStateChanger;
 
 class Logouter {
 

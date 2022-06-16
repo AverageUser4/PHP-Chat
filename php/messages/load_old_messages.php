@@ -5,8 +5,8 @@ declare(strict_types=1);
 set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat');
 require_once 'vendor/autoload.php';
 
-use PHP\Messages\InitialMessagesLoader;
-use PHP\Messages\OldMessagesLoader;
+use PHP\Classes\Messages\InitialMessagesLoader;
+use PHP\Classes\Messages\OldMessagesLoader;
 
 $messages_loader = isset($_GET['oldest']) ? 
 new OldMessagesLoader() : new InitialMessagesLoader();

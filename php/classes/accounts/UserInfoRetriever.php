@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PHP\Accounts;
+namespace PHP\Classes\Accounts;
 
-use PHP\Global\PDOConnection;
+use PHP\Classes\Global\PDOConnection;
+use PHP\Classes\Global\Validator;
 use \PDO;
-use PHP\Global\Validator;
 
 class UserInfoRetriever {
 

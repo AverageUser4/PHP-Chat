@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace PHP\Messages;
+namespace PHP\Classes\Messages;
 
-use PHP\Global\Validator;
-use PHP\Global\PDOConnection;
+use PHP\Classes\Global\Validator;
+use PHP\Classes\Global\PDOConnection;
 use \PDO;
 
 class MessageSender {
@@ -14,7 +14,13 @@ class MessageSender {
   private $message;
   private $PDO_connection;
 
-  public function initialSetUp() {
+  public function send() {
+    $this -> initialSetUp();
+    $this -> initAndRunPDO();
+    return true;
+  }
+
+  private function initialSetUp() {
     set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat');
     require_once 'vendor/autoload.php';
 
@@ -34,7 +40,7 @@ class MessageSender {
     return true;
   }
 
-  public function initAndRunPDO() {
+  private function initAndRunPDO() {
     $this -> PDO_connection = new PDOConnection();
     $query_string = 
     "INSERT INTO messages 

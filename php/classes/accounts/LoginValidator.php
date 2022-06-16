@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace PHP\Accounts;
+namespace PHP\Classes\Accounts;
 
-use PHP\Global\Validator;
-use PHP\Global\PDOConnection;
-use PHP\Accounts\Loginer;
+use PHP\Classes\Global\Validator;
+use PHP\Classes\Global\PDOConnection;
+use PHP\Classes\Accounts\Loginer;
 use \PDO;
 
 class LoginValidator {

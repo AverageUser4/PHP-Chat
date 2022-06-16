@@ -5,8 +5,7 @@ declare(strict_types=1);
 set_include_path($_SERVER['DOCUMENT_ROOT'] . '/chat');
 require 'vendor/autoload.php';
 
-use PHP\Messages\UpdateChecker;
-use PHP\Global\PDOConnection;
+use PHP\Classes\Messages\UpdateChecker;
 
 // for testing
 // session_start();
@@ -15,6 +14,4 @@ use PHP\Global\PDOConnection;
 // $_GET['latest'] = 0;
 
 $update_checker = new UpdateChecker();
-$update_checker -> initialSetUp();
-$update_checker -> setUpDBConnection(new PDOConnection());
-$update_checker -> runLoop();
+$update_checker -> setUpAndStartLoop();

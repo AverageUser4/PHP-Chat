@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use PHP\Messages\InitialMessagesLoader;
+use PHP\Classes\Messages\InitialMessagesLoader;
 
 class InitialMessagesLoaderTest extends TestCase {
 
